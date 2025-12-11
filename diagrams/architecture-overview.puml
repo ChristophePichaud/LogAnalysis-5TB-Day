@@ -1,0 +1,147 @@
+@startuml Architecture Overview - Log Analysis 5TB/Day
+
+!define AZURE_BLUE #0072C6
+!define COMPONENT_GRAY #E0E0E0
+!define DATA_GREEN #4CAF50
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam shadowing false
+
+title Architecture Globale - Analyse de Logs 5TB/Jour avec Azure Data Explorer
+
+' ====== Sources de Logs ======
+package "Sources de Logs" as sources {
+    component "Applications\nMicroservices" as apps AZURE_BLUE
+    component "Infrastructure\n(VMs, K8s)" as infra AZURE_BLUE
+    component "Azure Services\n(App Insights)" as azure_services AZURE_BLUE
+    component "On-Premises\nSystems" as onprem AZURE_BLUE
+}
+
+' ====== Couche de Collecte ======
+package "Collecte & Agrégation" as collection {
+    component "Fluentd/Vector\nAgents" as agents #FFA500
+    component "Azure Monitor\nAgent" as ama #FFA500
+    component "Logstash" as logstash #FFA500
+}
+
+' ====== Couche d'Ingestion ======
+package "Ingestion Layer" as ingestion {
+    component "Azure Event Hubs\n(32+ partitions)\n~208 GB/h" as eventhub DATA_GREEN
+    component "Azure Blob Storage\n(Batch mode)\nParquet/JSON" as storage DATA_GREEN
+    component "Event Grid\n(Notifications)" as eventgrid DATA_GREEN
+}
+
+' ====== Azure Data Explorer ======
+package "Azure Data Explorer Cluster" as adx_cluster {
+    rectangle "Engine Nodes Pool\n8-10 x Standard_E16s_v5" as engine_pool {
+        component "Node 1" as node1 COMPONENT_GRAY
+        component "Node 2" as node2 COMPONENT_GRAY
+        component "Node 3" as node3 COMPONENT_GRAY
+        component "Node N" as nodeN COMPONENT_GRAY
+    }
+    
+    database "Hot Cache\n(SSD - 7-14 days)\n~500GB-1TB" as hot_cache
+    database "Hot Storage\n(90 days)\n~3-4.5 TB" as hot_storage
+    database "Cold Storage\n(Azure Blob)\n(1-2 years)\n~18-36 TB" as cold_storage
+}
+
+' ====== Transformation ======
+package "Transformation" as transform {
+    component "Update Policies\n(Real-time enrichment)" as update_policy #FFD700
+    component "Materialized Views\n(Pre-aggregations)" as mat_views #FFD700
+}
+
+' ====== Consommation ======
+package "Analyse & Visualisation" as consumption {
+    component "KQL Queries\n(Web UI)" as kql_ui #9C27B0
+    component "Power BI\nDashboards" as powerbi #9C27B0
+    component "Grafana\nMonitoring" as grafana #9C27B0
+    component "Azure Dashboards" as azure_dash #9C27B0
+    component "REST APIs\n(Custom Apps)" as apis #9C27B0
+}
+
+' ====== Security & Governance ======
+package "Sécurité & Conformité" as security {
+    component "Azure AD\n(Authentication)" as aad #FF5722
+    component "RBAC & RLS\n(Authorization)" as rbac #FF5722
+    component "Private Endpoints\nVNet Integration" as vnet #FF5722
+    component "Audit Logs" as audit #FF5722
+}
+
+' ====== Monitoring ======
+package "Monitoring & Alerting" as monitoring {
+    component "Azure Monitor\n(Métriques)" as azmon #00BCD4
+    component "ADX Insights\n(Dashboard)" as adx_insights #00BCD4
+    component "Log Analytics\n(Meta-monitoring)" as log_analytics #00BCD4
+    component "Alerts & Actions" as alerts #00BCD4
+}
+
+' ====== Flux de données ======
+apps -down-> agents : "Logs\nJSON/Syslog"
+infra -down-> agents : "System Logs"
+azure_services -down-> ama : "Diagnostics"
+onprem -down-> logstash : "Syslog/TCP"
+
+agents -down-> eventhub : "Streaming\n<30s latency"
+agents -down-> storage : "Batch\n5-10 min"
+ama -down-> eventhub : "Streaming"
+logstash -down-> eventhub : "Streaming"
+
+storage -down-> eventgrid : "Blob Created\nEvents"
+
+eventhub -down-> engine_pool : "Native\nData Connection"
+eventgrid -down-> engine_pool : "Trigger\nIngestion"
+
+engine_pool -down-> hot_cache : "Write\n+ Index"
+hot_cache -down-> hot_storage : "Age out\n(14 days)"
+hot_storage -down-> cold_storage : "Archive\n(90 days)"
+
+engine_pool -right-> update_policy : "On Ingest"
+update_policy -right-> mat_views : "Transform"
+
+engine_pool -up-> kql_ui : "Queries"
+engine_pool -up-> powerbi : "Direct Query"
+engine_pool -up-> grafana : "Plugin"
+engine_pool -up-> azure_dash : "Integration"
+engine_pool -up-> apis : "REST API"
+
+aad -down-> engine_pool : "Auth"
+rbac -down-> engine_pool : "Authz"
+vnet -down-> engine_pool : "Network\nIsolation"
+
+engine_pool -down-> audit : "Audit Trail"
+engine_pool -down-> azmon : "Metrics"
+engine_pool -down-> adx_insights : "Insights"
+azmon -down-> alerts : "Trigger"
+
+' ====== Disaster Recovery ======
+package "DR & Backup" as dr <<Cloud>> {
+    component "Follower Database\n(Secondary Region)" as follower #E91E63
+    component "Continuous Export\n(Backup to Blob)" as export #E91E63
+}
+
+engine_pool -[dashed]right-> follower : "Replication\n(Read-only)"
+engine_pool -[dashed]right-> export : "Backup\n(Hourly)"
+
+' ====== Légende ======
+legend right
+    |= Couleur |= Signification |
+    | <back:AZURE_BLUE>   </back> | Sources & Azure Services |
+    | <back:#FFA500>   </back> | Collection Agents |
+    | <back:DATA_GREEN>   </back> | Ingestion Layer |
+    | <back:COMPONENT_GRAY>   </back> | ADX Compute Nodes |
+    | <back:#FFD700>   </back> | Transformation |
+    | <back:#9C27B0>   </back> | Consumption |
+    | <back:#FF5722>   </back> | Security |
+    | <back:#00BCD4>   </back> | Monitoring |
+    | <back:#E91E63>   </back> | DR & Backup |
+    
+    **Métriques clés:**
+    * Volume: 5TB/jour (~208 GB/h)
+    * Latence: <2 minutes end-to-end
+    * Compression: 10:1 (5TB → 500GB)
+    * SLA: 99.9%
+endlegend
+
+@enduml

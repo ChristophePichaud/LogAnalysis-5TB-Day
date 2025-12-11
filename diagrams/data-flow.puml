@@ -1,0 +1,164 @@
+@startuml Data Flow - Log Ingestion Pipeline
+
+!define AZURE_BLUE #0072C6
+!define PROCESS_ORANGE #FF9800
+!define STORAGE_GREEN #4CAF50
+
+skinparam backgroundColor white
+skinparam shadowing false
+skinparam defaultFontSize 11
+
+title Flux de Données Détaillé - Ingestion de Logs
+
+' ====== Actors ======
+actor "Application\nServices" as app
+actor "DevOps\nTeams" as devops
+
+' ====== Step 1: Log Generation ======
+box "1. Génération de Logs" #LightBlue
+    participant "App Logger\n(Log4j, Serilog)" as logger
+    participant "Local Buffer\n(File/Memory)" as buffer
+end box
+
+' ====== Step 2: Collection ======
+box "2. Collection" #LightYellow
+    participant "Agent\n(Fluentd/Vector)" as agent
+    participant "Parsing &\nEnrichment" as parsing
+end box
+
+' ====== Step 3: Transport ======
+box "3. Transport Layer" #LightGreen
+    participant "Event Hubs\n(32 partitions)" as eventhub
+    participant "Blob Storage\n(Batch)" as blob
+end box
+
+' ====== Step 4: ADX Ingestion ======
+box "4. Azure Data Explorer" #LightCyan
+    participant "Data\nConnection" as dataconn
+    participant "Ingestion\nEngine" as ingestion_engine
+    participant "Storage\nEngine" as storage_engine
+end box
+
+' ====== Step 5: Query & Analysis ======
+box "5. Query Layer" #LightPink
+    participant "Query\nEngine" as query_engine
+    participant "Cache\nManager" as cache
+end box
+
+' ====== Flow ======
+app -> logger : Generate log event
+activate logger
+logger -> logger : Format\n(JSON/Structured)
+logger -> buffer : Write to buffer
+deactivate logger
+
+agent -> buffer : Tail logs\n(every 1-10s)
+activate agent
+agent -> parsing : Parse & validate
+activate parsing
+parsing -> parsing : Add metadata\n(hostname, region)
+parsing -> parsing : Filter/Transform
+deactivate parsing
+
+alt Streaming Path (Critical Logs)
+    agent -> eventhub : Send event\n(GZip compressed)
+    activate eventhub
+    note right: Latency: 10-30s\nPartitioning by key
+    eventhub -> dataconn : Consumer group\nreads batches
+    deactivate eventhub
+else Batch Path (All Logs)
+    agent -> blob : Upload file\n(every 5-10 min)
+    activate blob
+    note right: File: 100-500 MB\nFormat: Parquet/JSON
+    blob -> dataconn : Event Grid\nnotification
+    deactivate blob
+end
+
+deactivate agent
+
+activate dataconn
+dataconn -> dataconn : Validate format\n& mapping
+dataconn -> ingestion_engine : Queue ingestion\njob
+deactivate dataconn
+
+activate ingestion_engine
+ingestion_engine -> ingestion_engine : 1. Decompress
+ingestion_engine -> ingestion_engine : 2. Parse JSON/Parquet
+ingestion_engine -> ingestion_engine : 3. Apply schema
+ingestion_engine -> ingestion_engine : 4. Compress (10:1)
+ingestion_engine -> ingestion_engine : 5. Index columns
+ingestion_engine -> ingestion_engine : 6. Create extents\n(data shards)
+
+alt Update Policy Enabled
+    ingestion_engine -> ingestion_engine : Execute transformation\nfunction
+    note right: Enrich, aggregate,\nclean data
+end
+
+ingestion_engine -> storage_engine : Write extents
+deactivate ingestion_engine
+
+activate storage_engine
+storage_engine -> storage_engine : Store in\nHot Cache (SSD)
+storage_engine -> storage_engine : Update metadata
+storage_engine -> storage_engine : Replicate to nodes
+note right: Data available\nfor queries
+deactivate storage_engine
+
+devops -> query_engine : Execute KQL query
+activate query_engine
+query_engine -> cache : Check hot cache
+activate cache
+
+alt Data in Cache
+    cache -> query_engine : Return from SSD
+    note right: Latency: 100-500ms
+else Data in Hot Storage
+    cache -> storage_engine : Fetch from storage
+    storage_engine -> cache : Return data
+    note right: Latency: 500ms-2s
+else Data in Cold Storage
+    cache -> storage_engine : Fetch from Blob
+    storage_engine -> cache : Return data
+    note right: Latency: 2-5s
+end
+
+deactivate cache
+query_engine -> query_engine : Execute query\n(parallel scan)
+query_engine -> query_engine : Aggregate results
+query_engine -> devops : Return results
+deactivate query_engine
+
+' ====== Timing Annotations ======
+note over logger, buffer
+    **T+0s**: Log generated
+end note
+
+note over agent, parsing
+    **T+5s**: Collected & parsed
+end note
+
+note over eventhub, blob
+    **T+10s-30s**: Buffered in transport
+end note
+
+note over dataconn, storage_engine
+    **T+1m-2m**: Ingested & indexed
+end note
+
+note over query_engine
+    **T+2m**: Available for queries
+end note
+
+' ====== Metrics Box ======
+box "Métriques de Performance" #Lavender
+    note over app, devops
+        **Volume**: 5TB/jour = 208 GB/h = 58 MB/s
+        **Latence end-to-end**: < 2 minutes
+        **Compression ratio**: 10:1 (5TB → 500GB)
+        **Query latency**: 100ms - 2s (selon cache)
+        **Throughput**: 200+ GB/h par nœud
+        **Durabilité**: 3x réplication
+    end note
+end box
+
+@enduml
