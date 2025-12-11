@@ -1,0 +1,170 @@
+@startuml ADX Cluster Architecture
+
+!define COMPUTE_BLUE #2196F3
+!define STORAGE_GREEN #4CAF50
+!define METADATA_YELLOW #FFC107
+
+skinparam backgroundColor white
+skinparam componentStyle rectangle
+skinparam shadowing true
+
+title Architecture Détaillée du Cluster Azure Data Explorer
+
+' ====== Load Balancer ======
+component "Azure Load Balancer" as lb #9E9E9E {
+    [Query Endpoint\nhttps://cluster.region.kusto.windows.net] as query_ep
+    [Ingestion Endpoint\nhttps://ingest-cluster.region.kusto.windows.net] as ingest_ep
+}
+
+' ====== Engine Nodes ======
+package "Engine Node Pool (8-10 nodes)" as engine_pool {
+    
+    rectangle "Engine Node 1\nStandard_E16s_v5" as node1 {
+        component [Query Executor] as qe1 COMPUTE_BLUE
+        component [Ingestion Engine] as ie1 COMPUTE_BLUE
+        database "Local SSD Cache\n64GB" as cache1 STORAGE_GREEN
+        component [Extent Manager] as em1 METADATA_YELLOW
+    }
+    
+    rectangle "Engine Node 2\nStandard_E16s_v5" as node2 {
+        component [Query Executor] as qe2 COMPUTE_BLUE
+        component [Ingestion Engine] as ie2 COMPUTE_BLUE
+        database "Local SSD Cache\n64GB" as cache2 STORAGE_GREEN
+        component [Extent Manager] as em2 METADATA_YELLOW
+    }
+    
+    rectangle "Engine Node 3\nStandard_E16s_v5" as node3 {
+        component [Query Executor] as qe3 COMPUTE_BLUE
+        component [Ingestion Engine] as ie3 COMPUTE_BLUE
+        database "Local SSD Cache\n64GB" as cache3 STORAGE_GREEN
+        component [Extent Manager] as em3 METADATA_YELLOW
+    }
+    
+    component "...\nNodes 4-10" as more_nodes
+}
+
+' ====== Data Management ======
+package "Data Management Service" as dm_service {
+    component "Metadata\nCatalog" as catalog METADATA_YELLOW
+    component "Schema\nManagement" as schema METADATA_YELLOW
+    component "Policy\nEngine" as policy METADATA_YELLOW
+    component "Ingestion\nOrchestrator" as orchestrator COMPUTE_BLUE
+    component "Query\nPlanner" as planner COMPUTE_BLUE
+}
+
+' ====== Storage Layers ======
+package "Storage Tiers" as storage_tiers {
+    
+    database "Hot Cache (SSD)\n7-14 days\n~500GB-1TB\nP50, P95 queries" as hot_cache STORAGE_GREEN
+    
+    database "Hot Storage (Premium)\n90 days\n~3-4.5 TB\nAll queries" as hot_storage STORAGE_GREEN
+    
+    database "Cold Storage (Blob Cool)\n1-2 years\n~18-36 TB\nHistorical queries" as cold_storage STORAGE_GREEN
+}
+
+' ====== External Services ======
+cloud "Azure Services" {
+    component "Event Hubs\n(Ingestion)" as eventhub #FF9800
+    component "Blob Storage\n(Source & Archive)" as blob #FF9800
+    component "Azure Monitor\n(Telemetry)" as monitor #00BCD4
+    component "Azure AD\n(Auth)" as aad #F44336
+}
+
+' ====== Connections ======
+query_ep -down-> planner : "KQL Queries"
+ingest_ep -down-> orchestrator : "Ingestion\nRequests"
+
+eventhub -down-> orchestrator : "Stream\nIngestion"
+blob -down-> orchestrator : "Batch\nIngestion"
+
+orchestrator -down-> ie1 : "Distribute\nwork"
+orchestrator -down-> ie2
+orchestrator -down-> ie3
+
+planner -down-> qe1 : "Execute\nquery plan"
+planner -down-> qe2
+planner -down-> qe3
+
+ie1 -down-> cache1 : "Write\ndata"
+ie2 -down-> cache2
+ie3 -down-> cache3
+
+cache1 -down-> hot_storage : "Persist"
+cache2 -down-> hot_storage
+cache3 -down-> hot_storage
+
+hot_storage -down-> cold_storage : "Age out\n(90 days)"
+
+qe1 -down-> cache1 : "Read\nfrom cache"
+qe2 -down-> cache2
+qe3 -down-> cache3
+
+cache1 -[dashed]-> hot_cache : "Part of"
+cache2 -[dashed]-> hot_cache
+cache3 -[dashed]-> hot_cache
+
+catalog -down-> em1 : "Extent\nmetadata"
+catalog -down-> em2
+catalog -down-> em3
+
+policy -down-> em1 : "Retention,\nCache policies"
+policy -down-> em2
+policy -down-> em3
+
+engine_pool -up-> monitor : "Metrics &\nLogs"
+lb -up-> aad : "Auth\nValidation"
+
+' ====== Replication ======
+node1 -[dashed]right-> node2 : "Extent\nReplication"
+node2 -[dashed]right-> node3 : "Extent\nReplication"
+
+' ====== Data Flow Annotations ======
+note right of ie1
+    **Ingestion Process:**
+    1. Receive data batch
+    2. Decompress & parse
+    3. Apply schema/mapping
+    4. Compress (10:1 ratio)
+    5. Index all columns
+    6. Create extent (shard)
+    7. Replicate to 2+ nodes
+    8. Update metadata
+end note
+
+note right of qe1
+    **Query Process:**
+    1. Parse KQL query
+    2. Create execution plan
+    3. Identify relevant extents
+    4. Parallel scan across nodes
+    5. Apply filters & aggregations
+    6. Merge results
+    7. Return to client
+end note
+
+note bottom of hot_cache
+    **Hot Cache Benefits:**
+    * Sub-second queries
+    * Recent data (7-14 days)
+    * SSD-backed
+    * Auto-managed
+end note
+
+' ====== Specs Box ======
+legend bottom
+    **Node Specifications (Standard_E16s_v5):**
+    * vCPUs: 16 cores
+    * RAM: 128 GB
+    * SSD Cache: 512 GB (per node)
+    * Network: 12,500 Mbps
+    * Capacity: ~200 GB/h ingestion per node
+    
+    **Cluster Totals (8 nodes):**
+    * Total vCPUs: 128 cores
+    * Total RAM: 1 TB
+    * Total Cache: 4 TB SSD
+    * Ingestion: 1,600 GB/h (~625 GB/h needed)
+    * Redundancy: 3x replication
+endlegend
+
+@enduml
