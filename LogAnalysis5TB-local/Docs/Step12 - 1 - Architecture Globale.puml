@@ -1,0 +1,13 @@
+@startuml
+!define RECTANGLE class
+RECTANGLE "Sources de logs" as Sources
+RECTANGLE "Agents d'ingestion (AMA, Logstash, Fluentd)" as Agents
+RECTANGLE "Buffer/Streaming (Event Hub)" as Buffer
+RECTANGLE "Analyse & Stockage (ADX, Log Analytics, Databricks, ELK)" as Analyse
+RECTANGLE "Dashboards & Alerting (Power BI, Kibana, Azure Monitor)" as Dashboards
+
+Sources --> Agents
+Agents --> Buffer
+Buffer --> Analyse
+Analyse --> Dashboards
+@enduml

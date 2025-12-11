@@ -1,0 +1,3489 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>_LeDossierArchitecture.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="loganalysis-5tb-day">LogAnalysis-5TB-Day</h1>
+<h2 id="%F0%9F%9A%80-quick-start">🚀 Quick Start</h2>
+<p><strong>Nouveau?</strong> Commencez par le <strong><a href="./EXECUTIVE-SUMMARY.md">Executive Summary</a></strong> (5 minutes de lecture) pour une vue d'ensemble rapide de la solution, des coûts et du ROI.</p>
+<h2 id="vue-densemble">Vue d'ensemble</h2>
+<p>Ce repository contient l'architecture et la documentation pour une solution d'analyse de <strong>5 TB de logs par jour</strong> en utilisant <strong>Azure Data Explorer (ADX)</strong> avec le langage de requête <strong>KQL (Kusto Query Language)</strong>.</p>
+<h2 id="%F0%9F%93%8B-contenu-de-la-documentation">📋 Contenu de la Documentation</h2>
+<h3 id="%E2%9A%A1-executive-summary">⚡ Executive Summary</h3>
+<h4 id="executive-summary-%E2%AD%90-start-here"><a href="./EXECUTIVE-SUMMARY.md">Executive Summary</a> ⭐ <strong>START HERE</strong></h4>
+<p>Résumé exécutif de 5 minutes avec:</p>
+<ul>
+<li>Solution recommandée et justification</li>
+<li>Coûts résumés (4 scénarios)</li>
+<li>Architecture simplifiée</li>
+<li>ROI et bénéfices</li>
+<li>Comparaison alternatives</li>
+<li>Quick start en 30 minutes</li>
+</ul>
+<h3 id="%F0%9F%93%90-architecture">📐 Architecture</h3>
+<h4 id="architecture-globale"><a href="./architecture.md">Architecture Globale</a></h4>
+<p>Document principal décrivant l'architecture complète de la solution:</p>
+<ul>
+<li>Vue d'ensemble et objectifs</li>
+<li>Composants principaux (ADX, Event Hubs, Storage)</li>
+<li>Stratégies de déploiement et sécurité</li>
+<li>Haute disponibilité et disaster recovery</li>
+<li>Monitoring et optimisations</li>
+</ul>
+<h4 id="solution-technique-adx"><a href="./adx-solution.md">Solution Technique ADX</a></h4>
+<p>Détails techniques approfondis sur Azure Data Explorer:</p>
+<ul>
+<li>Pourquoi ADX pour l'analyse de logs</li>
+<li>Architecture détaillée du cluster</li>
+<li>Configuration et sizing (8-10 nœuds E16s_v5)</li>
+<li>Schémas de tables optimisés</li>
+<li>Materialized views et update policies</li>
+<li>Best practices et cas d'usage réels</li>
+</ul>
+<h3 id="%F0%9F%94%84-ingestion-de-donn%C3%A9es">🔄 Ingestion de Données</h3>
+<h4 id="strat%C3%A9gie-dingestion"><a href="./data-ingestion.md">Stratégie d'Ingestion</a></h4>
+<p>Guide complet sur l'ingestion de 5TB/jour:</p>
+<ul>
+<li><strong>Option 1</strong>: Azure Event Hubs (Streaming) - Recommandé
+<ul>
+<li>Latence &lt; 2 minutes</li>
+<li>Configuration 32+ partitions</li>
+</ul>
+</li>
+<li><strong>Option 2</strong>: Azure Blob Storage (Batch)
+<ul>
+<li>Coût réduit</li>
+<li>Latence 5-15 minutes</li>
+</ul>
+</li>
+<li><strong>Option 3</strong>: Hybrid (Streaming + Batch)</li>
+<li>Transformation et enrichissement avec Update Policies</li>
+<li>Monitoring et troubleshooting</li>
+</ul>
+<h3 id="%F0%9F%93%8A-requ%C3%AAtes-et-analyse">📊 Requêtes et Analyse</h3>
+<h4 id="exemples-kql"><a href="./kql-examples.md">Exemples KQL</a></h4>
+<p>Collection complète de requêtes KQL pour l'analyse de logs:</p>
+<ul>
+<li>Analyses de base (comptages, filtres)</li>
+<li>Analyse temporelle et time series</li>
+<li>Performance et latence</li>
+<li>Analyse d'erreurs et troubleshooting</li>
+<li>Sécurité et audit</li>
+<li>Distributed tracing multi-service</li>
+<li>Analytics business</li>
+<li>Monitoring et alerting</li>
+<li>Fonctions personnalisées et best practices</li>
+</ul>
+<h3 id="%F0%9F%92%B0-estimation-financi%C3%A8re">💰 Estimation Financière</h3>
+<h4 id="estimation-de-co%C3%BBts"><a href="./cost-estimation.md">Estimation de Coûts</a></h4>
+<p>Analyse détaillée des coûts (Step 2):</p>
+<ul>
+<li><strong>Coût mensuel baseline</strong>: $15,000-20,000 (~$180,000-240,000/an)</li>
+<li><strong>Coût optimisé avec RI</strong>: $13,000-15,000 (~$156,000-180,000/an)</li>
+<li>Détail par composant (ADX, Event Hubs, Storage, Network)</li>
+<li>3 scénarios: Production Optimisée, Startup, Enterprise HA</li>
+<li>Stratégies d'optimisation (Reserved Instances, Tiered Storage)</li>
+<li>Comparaison avec alternatives (Elasticsearch, Splunk, Datadog)</li>
+<li>ROI et justification business</li>
+</ul>
+<h3 id="%F0%9F%8E%A8-diagrammes-darchitecture">🎨 Diagrammes d'Architecture</h3>
+<h4 id="diagrammes-puml"><a href="./diagrams/">Diagrammes PUML</a></h4>
+<p>Diagrammes PlantUML pour visualiser l'architecture:</p>
+<ol>
+<li>
+<p><strong><a href="./diagrams/architecture-overview.puml">architecture-overview.puml</a></strong></p>
+<ul>
+<li>Vue d'ensemble complète de la solution</li>
+<li>Sources → Collection → Ingestion → ADX → Consommation</li>
+<li>Sécurité, monitoring, DR</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./diagrams/data-flow.puml">data-flow.puml</a></strong></p>
+<ul>
+<li>Flux de données détaillé end-to-end</li>
+<li>Séquence d'ingestion avec timings</li>
+<li>5 étapes: Génération → Collection → Transport → Ingestion → Query</li>
+</ul>
+</li>
+<li>
+<p><strong><a href="./diagrams/adx-cluster.puml">adx-cluster.puml</a></strong></p>
+<ul>
+<li>Architecture interne du cluster ADX</li>
+<li>Engine nodes, storage tiers, data management</li>
+<li>Spécifications techniques par nœud</li>
+</ul>
+</li>
+</ol>
+<p><strong>Pour générer les images PNG</strong> depuis les fichiers PUML:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Installation PlantUML</span>
+brew install plantuml  <span class="hljs-comment"># macOS</span>
+<span class="hljs-comment"># ou</span>
+sudo apt install plantuml  <span class="hljs-comment"># Ubuntu</span>
+
+<span class="hljs-comment"># Génération des diagrammes</span>
+plantuml diagrams/*.puml
+</div></code></pre>
+<h2 id="%F0%9F%8E%AF-solution-propos%C3%A9e">🎯 Solution Proposée</h2>
+<h3 id="architecture-recommand%C3%A9e">Architecture Recommandée</h3>
+<p><strong>Cluster Azure Data Explorer</strong>:</p>
+<ul>
+<li><strong>8 nœuds</strong> Standard_E16s_v5 (16 cores, 128GB RAM, 512GB SSD)</li>
+<li><strong>Capacité d'ingestion</strong>: 1,600 GB/h (marge pour peaks 3x)</li>
+<li><strong>Hot cache</strong>: 4 TB SSD (7-14 jours)</li>
+<li><strong>Hot storage</strong>: 90 jours (~4.5 TB compressé)</li>
+<li><strong>Cold storage</strong>: 1-2 ans (Azure Blob Cool Tier)</li>
+</ul>
+<p><strong>Ingestion via Event Hubs</strong>:</p>
+<ul>
+<li><strong>32 partitions</strong> pour parallélisme</li>
+<li><strong>10-20 Throughput Units</strong> avec auto-inflate</li>
+<li><strong>Latence</strong>: &lt; 2 minutes end-to-end</li>
+<li><strong>Format</strong>: JSON compressé (GZip) ou Parquet</li>
+</ul>
+<p><strong>Performance</strong>:</p>
+<ul>
+<li><strong>Requêtes</strong>: Sub-seconde sur milliards d'événements</li>
+<li><strong>Compression</strong>: Ratio 10:1 (5TB → 500GB stocké)</li>
+<li><strong>SLA</strong>: 99.9% (99.99% avec multi-région)</li>
+</ul>
+<h3 id="m%C3%A9triques-cl%C3%A9s">Métriques Clés</h3>
+<table>
+<thead>
+<tr>
+<th>Métrique</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Volume quotidien</td>
+<td>5 TB</td>
+</tr>
+<tr>
+<td>Débit moyen</td>
+<td>208 GB/h (~58 MB/s)</td>
+</tr>
+<tr>
+<td>Débit peak (3x)</td>
+<td>625 GB/h</td>
+</tr>
+<tr>
+<td>Latence ingestion</td>
+<td>&lt; 2 minutes</td>
+</tr>
+<tr>
+<td>Latence query (hot cache)</td>
+<td>&lt; 500ms</td>
+</tr>
+<tr>
+<td>Compression ratio</td>
+<td>10:1</td>
+</tr>
+<tr>
+<td>Rétention hot</td>
+<td>90 jours</td>
+</tr>
+<tr>
+<td>Rétention cold</td>
+<td>1-2 ans</td>
+</tr>
+</tbody>
+</table>
+<h3 id="co%C3%BBts-estim%C3%A9s">Coûts Estimés</h3>
+<table>
+<thead>
+<tr>
+<th>Scénario</th>
+<th style="text-align:right">Mensuel</th>
+<th style="text-align:right">Annuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Baseline (sans optimisations)</strong></td>
+<td style="text-align:right">$20,340</td>
+<td style="text-align:right">$244,080</td>
+</tr>
+<tr>
+<td><strong>Production Standard</strong></td>
+<td style="text-align:right">$15,291</td>
+<td style="text-align:right">$183,492</td>
+</tr>
+<tr>
+<td><strong>Optimisé (RI 3 ans)</strong></td>
+<td style="text-align:right">$13,465</td>
+<td style="text-align:right">$161,580</td>
+</tr>
+<tr>
+<td><strong>Startup Minimal</strong></td>
+<td style="text-align:right">$5,000</td>
+<td style="text-align:right">$60,000</td>
+</tr>
+<tr>
+<td><strong>Enterprise HA Multi-région</strong></td>
+<td style="text-align:right">$17,273</td>
+<td style="text-align:right">$207,276</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%F0%9F%9A%80-d%C3%A9marrage-rapide">🚀 Démarrage Rapide</h2>
+<h3 id="pr%C3%A9requis">Prérequis</h3>
+<ul>
+<li>Subscription Azure</li>
+<li>Azure CLI installé</li>
+<li>Permissions pour créer ressources (Contributor role minimum)</li>
+</ul>
+<h3 id="%C3%A9tape-1-cr%C3%A9er-le-cluster-adx">Étape 1: Créer le Cluster ADX</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># Variables</span>
+RG=<span class="hljs-string">"rg-loganalysis-prod"</span>
+LOCATION=<span class="hljs-string">"westeurope"</span>
+CLUSTER_NAME=<span class="hljs-string">"loganalysis-prod-adx"</span>
+
+<span class="hljs-comment"># Créer resource group</span>
+az group create --name <span class="hljs-variable">$RG</span> --location <span class="hljs-variable">$LOCATION</span>
+
+<span class="hljs-comment"># Créer cluster ADX</span>
+az kusto cluster create \
+  --cluster-name <span class="hljs-variable">$CLUSTER_NAME</span> \
+  --resource-group <span class="hljs-variable">$RG</span> \
+  --location <span class="hljs-variable">$LOCATION</span> \
+  --sku Standard_E16s_v5 \
+  --capacity 8 \
+  --<span class="hljs-built_in">enable</span>-streaming-ingest <span class="hljs-literal">true</span> \
+  --zones <span class="hljs-string">"1,2,3"</span>
+</div></code></pre>
+<h3 id="%C3%A9tape-2-cr%C3%A9er-event-hub">Étape 2: Créer Event Hub</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># Event Hub Namespace</span>
+az eventhubs namespace create \
+  --name <span class="hljs-string">"loganalysis-prod-eh"</span> \
+  --resource-group <span class="hljs-variable">$RG</span> \
+  --location <span class="hljs-variable">$LOCATION</span> \
+  --sku Standard \
+  --<span class="hljs-built_in">enable</span>-auto-inflate <span class="hljs-literal">true</span> \
+  --maximum-throughput-units 20
+
+<span class="hljs-comment"># Event Hub</span>
+az eventhubs eventhub create \
+  --name <span class="hljs-string">"application-logs"</span> \
+  --namespace-name <span class="hljs-string">"loganalysis-prod-eh"</span> \
+  --partition-count 32 \
+  --message-retention 1
+</div></code></pre>
+<h3 id="%C3%A9tape-3-configurer-adx-database-et-tables">Étape 3: Configurer ADX Database et Tables</h3>
+<p>Se référer à <a href="./adx-solution.md">adx-solution.md</a> section &quot;Configuration Détaillée&quot; pour:</p>
+<ul>
+<li>Création de database</li>
+<li>Définition du schéma de table</li>
+<li>Ingestion mapping</li>
+<li>Data connection vers Event Hub</li>
+</ul>
+<h3 id="%C3%A9tape-4-d%C3%A9ployer-agents-de-collecte">Étape 4: Déployer Agents de Collecte</h3>
+<p>Se référer à <a href="./data-ingestion.md">data-ingestion.md</a> section &quot;Configuration des Agents&quot; pour:</p>
+<ul>
+<li>Fluentd configuration</li>
+<li>Vector configuration</li>
+<li>Routage et buffering</li>
+</ul>
+<h2 id="%F0%9F%93%9A-ressources">📚 Ressources</h2>
+<h3 id="documentation-officielle">Documentation Officielle</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/">Azure Data Explorer</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kql-quick-reference">KQL Reference</a></li>
+<li><a href="https://docs.microsoft.com/azure/event-hubs/">Event Hubs Documentation</a></li>
+</ul>
+<h3 id="outils">Outils</h3>
+<ul>
+<li><a href="https://dataexplorer.azure.com/">ADX Web UI</a></li>
+<li><a href="https://azure.microsoft.com/pricing/calculator/">Azure Pricing Calculator</a></li>
+<li><a href="https://dataexplorer.azure.com/clusters/help/databases/Samples">KQL Playground</a></li>
+</ul>
+<h3 id="tutoriels">Tutoriels</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/best-practices">ADX Best Practices</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/ingest-data-overview">Ingestion Best Practices</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kusto/query/best-practices">Query Best Practices</a></li>
+</ul>
+<h2 id="%F0%9F%A4%9D-contributions">🤝 Contributions</h2>
+<p>Ce repository est un document d'architecture. Pour des questions ou suggestions:</p>
+<ul>
+<li>Ouvrir une issue</li>
+<li>Proposer des améliorations via PR</li>
+<li>Contacter l'équipe Platform Engineering</li>
+</ul>
+<h2 id="%F0%9F%93%9D-licence">📝 Licence</h2>
+<p>Documentation sous licence MIT - voir fichier LICENSE</p>
+<h2 id="%E2%9C%85-checklist-de-mise-en-%C5%93uvre">✅ Checklist de Mise en Œuvre</h2>
+<h3 id="phase-1-foundation-mois-1-2">Phase 1: Foundation (Mois 1-2)</h3>
+<ul>
+<li><input type="checkbox" id="checkbox0"><label for="checkbox0">Provisionner cluster ADX</label></li>
+<li><input type="checkbox" id="checkbox1"><label for="checkbox1">Configurer Event Hub ou Blob Storage</label></li>
+<li><input type="checkbox" id="checkbox2"><label for="checkbox2">Créer databases et tables</label></li>
+<li><input type="checkbox" id="checkbox3"><label for="checkbox3">Setup ingestion mappings</label></li>
+<li><input type="checkbox" id="checkbox4"><label for="checkbox4">Tester ingestion end-to-end</label></li>
+<li><input type="checkbox" id="checkbox5"><label for="checkbox5">Configurer monitoring de base</label></li>
+</ul>
+<h3 id="phase-2-optimisation-mois-3-4">Phase 2: Optimisation (Mois 3-4)</h3>
+<ul>
+<li><input type="checkbox" id="checkbox6"><label for="checkbox6">Implémenter Update Policies</label></li>
+<li><input type="checkbox" id="checkbox7"><label for="checkbox7">Créer Materialized Views</label></li>
+<li><input type="checkbox" id="checkbox8"><label for="checkbox8">Optimiser hot cache policy</label></li>
+<li><input type="checkbox" id="checkbox9"><label for="checkbox9">Setup dashboards (Power BI/Grafana)</label></li>
+<li><input type="checkbox" id="checkbox10"><label for="checkbox10">Configurer alertes critiques</label></li>
+<li><input type="checkbox" id="checkbox11"><label for="checkbox11">Documenter runbooks</label></li>
+</ul>
+<h3 id="phase-3-scaling-mois-5-6">Phase 3: Scaling (Mois 5-6)</h3>
+<ul>
+<li><input type="checkbox" id="checkbox12"><label for="checkbox12">Acheter Reserved Instances</label></li>
+<li><input type="checkbox" id="checkbox13"><label for="checkbox13">Implémenter tiered storage</label></li>
+<li><input type="checkbox" id="checkbox14"><label for="checkbox14">Setup follower database (DR)</label></li>
+<li><input type="checkbox" id="checkbox15"><label for="checkbox15">Optimiser query performance</label></li>
+<li><input type="checkbox" id="checkbox16"><label for="checkbox16">Activer auto-scaling</label></li>
+<li><input type="checkbox" id="checkbox17"><label for="checkbox17">Audit de coûts</label></li>
+</ul>
+<h3 id="phase-4-excellence-mois-7">Phase 4: Excellence (Mois 7+)</h3>
+<ul>
+<li><input type="checkbox" id="checkbox18"><label for="checkbox18">ML pour anomaly detection</label></li>
+<li><input type="checkbox" id="checkbox19"><label for="checkbox19">Self-service analytics</label></li>
+<li><input type="checkbox" id="checkbox20"><label for="checkbox20">Advanced security (RLS)</label></li>
+<li><input type="checkbox" id="checkbox21"><label for="checkbox21">Multi-tenant isolation</label></li>
+<li><input type="checkbox" id="checkbox22"><label for="checkbox22">Continuous optimization</label></li>
+</ul>
+<h2 id="%F0%9F%93%8A-statut-du-projet">📊 Statut du Projet</h2>
+<p><strong>Step 1</strong>: ✅ <strong>Complété</strong> - Documentation Azure Data Explorer avec KQL</p>
+<ul>
+<li>Architecture globale</li>
+<li>Solution technique détaillée</li>
+<li>Exemples KQL complets</li>
+<li>Stratégie d'ingestion</li>
+<li>Diagrammes PUML</li>
+</ul>
+<p><strong>Step 2</strong>: ✅ <strong>Complété</strong> - Estimation financière</p>
+<ul>
+<li>Coûts détaillés par composant</li>
+<li>3 scénarios (Baseline, Optimisé, Enterprise)</li>
+<li>Comparaison avec alternatives</li>
+<li>Stratégies d'optimisation</li>
+<li>ROI et justification</li>
+</ul>
+<hr>
+<p><strong>Version</strong>: 1.0<br>
+<strong>Date</strong>: Juin 2024<br>
+<strong>Auteur</strong>: Architecture Team# Architecture Globale - Analyse de Logs 5TB/Jour</p>
+<h2 id="vue-densemble">Vue d'ensemble</h2>
+<p>Cette architecture décrit une solution complète pour l'analyse de <strong>5 TB de logs par jour</strong> en utilisant Azure Data Explorer (ADX), une plateforme hautement optimisée pour l'analyse de données massives en temps réel.</p>
+<h2 id="contexte-et-objectifs">Contexte et Objectifs</h2>
+<h3 id="contexte">Contexte</h3>
+<ul>
+<li><strong>Volume quotidien</strong>: 5 TB de fichiers de logs</li>
+<li><strong>Besoin</strong>: Analyse rapide, requêtes complexes, et visualisation</li>
+<li><strong>Échelle</strong>: ~1.8 PB par an</li>
+<li><strong>Exigences</strong>: Ingestion en temps quasi-réel, rétention flexible, performances élevées</li>
+</ul>
+<h3 id="objectifs-de-la-solution">Objectifs de la Solution</h3>
+<ol>
+<li><strong>Performance</strong>: Requêtes sub-secondes sur des milliards d'événements</li>
+<li><strong>Scalabilité</strong>: Supporter 5TB/jour avec possibilité d'évolution</li>
+<li><strong>Disponibilité</strong>: SLA 99.9% minimum</li>
+<li><strong>Coût-efficacité</strong>: Optimisation des coûts de stockage et compute</li>
+<li><strong>Facilité d'utilisation</strong>: Interface KQL intuitive pour les analystes</li>
+</ol>
+<h2 id="composants-principaux">Composants Principaux</h2>
+<h3 id="1-azure-data-explorer-adx---c%C5%93ur-de-la-solution">1. Azure Data Explorer (ADX) - Cœur de la Solution</h3>
+<p><strong>Caractéristiques clés</strong>:</p>
+<ul>
+<li>Moteur de requête distribué optimisé pour l'analyse de logs</li>
+<li>Compression native (~10:1 en moyenne)</li>
+<li>Indexation automatique de toutes les colonnes</li>
+<li>Support natif du format JSON, CSV, Parquet, Avro</li>
+</ul>
+<p><strong>Configuration recommandée</strong>:</p>
+<ul>
+<li><strong>Cluster</strong>: Type Engine Standard_E16s_v5+</li>
+<li><strong>Nombre de nœuds</strong>: 6-10 nœuds (évolutif selon charge)</li>
+<li><strong>Capacité d'ingestion</strong>: ~200-250 GB/heure/nœud</li>
+<li><strong>Cache SSD</strong>: Données chaudes (7-30 jours)</li>
+<li><strong>Stockage froid</strong>: Azure Blob Storage pour archives</li>
+</ul>
+<h3 id="2-couche-dingestion">2. Couche d'Ingestion</h3>
+<p><strong>Options d'ingestion</strong>:</p>
+<h4 id="option-a-azure-event-hubs-recommand%C3%A9-pour-streaming">Option A: Azure Event Hubs (Recommandé pour streaming)</h4>
+<ul>
+<li><strong>Débit</strong>: Jusqu'à 1 GB/sec par partition</li>
+<li><strong>Partitions</strong>: 32 partitions minimum pour 5TB/jour</li>
+<li><strong>Rétention</strong>: 1-7 jours dans Event Hub</li>
+<li><strong>Avantages</strong>: Faible latence, découplage, buffer automatique</li>
+</ul>
+<h4 id="option-b-azure-storage-batch">Option B: Azure Storage (Batch)</h4>
+<ul>
+<li><strong>Pattern</strong>: Drop de fichiers dans Blob Storage</li>
+<li><strong>Event Grid</strong>: Notification automatique vers ADX</li>
+<li><strong>Format</strong>: Compressed JSON, Parquet recommandé</li>
+<li><strong>Avantages</strong>: Simple, économique pour batch</li>
+</ul>
+<h4 id="option-c-hybrid">Option C: Hybrid</h4>
+<ul>
+<li>Streaming pour logs critiques via Event Hubs</li>
+<li>Batch pour logs historiques via Storage</li>
+</ul>
+<h3 id="3-transformation-et-enrichissement">3. Transformation et Enrichissement</h3>
+<p><strong>Update Policy dans ADX</strong>:</p>
+<pre class="hljs"><code><div>// Politique de mise à jour pour enrichissement automatique
+.create-or-alter function EnrichLogs() {
+    RawLogs
+    | extend 
+        ParsedTimestamp = todatetime(timestamp),
+        Severity = case(
+            level == &quot;error&quot;, &quot;High&quot;,
+            level == &quot;warning&quot;, &quot;Medium&quot;,
+            &quot;Low&quot;
+        ),
+        Region = extract(@&quot;region=([^,]+)&quot;, 1, metadata)
+    | project-away raw_field
+}
+</div></code></pre>
+<h3 id="4-stockage-hi%C3%A9rarchis%C3%A9">4. Stockage Hiérarchisé</h3>
+<p><strong>Stratégie de rétention</strong>:</p>
+<ul>
+<li><strong>Hot Cache (SSD)</strong>: 7-14 jours - Requêtes ultra-rapides</li>
+<li><strong>Hot Storage</strong>: 90 jours - Performance optimale</li>
+<li><strong>Cold Storage</strong>: 1-2 ans - Coût réduit, accès occasionnel</li>
+<li><strong>Archive</strong>: &gt; 2 ans - Export vers Azure Archive Storage</li>
+</ul>
+<h3 id="5-s%C3%A9curit%C3%A9-et-conformit%C3%A9">5. Sécurité et Conformité</h3>
+<p><strong>Contrôles d'accès</strong>:</p>
+<ul>
+<li><strong>Azure AD Integration</strong>: Authentification centralisée</li>
+<li><strong>Row Level Security (RLS)</strong>: Isolation par tenant/client</li>
+<li><strong>Chiffrement</strong>: At-rest (Azure Storage Encryption) et in-transit (TLS 1.2+)</li>
+<li><strong>Audit</strong>: Logs d'audit ADX activés</li>
+</ul>
+<p><strong>Compliance</strong>:</p>
+<ul>
+<li>GDPR: Support PII masking et data retention policies</li>
+<li>SOC 2, ISO 27001 compliance native Azure</li>
+</ul>
+<h2 id="architecture-de-d%C3%A9ploiement">Architecture de Déploiement</h2>
+<h3 id="configuration-multi-r%C3%A9gions">Configuration Multi-régions</h3>
+<p><strong>Région primaire</strong> (ex: West Europe):</p>
+<ul>
+<li>Cluster ADX primaire</li>
+<li>Event Hubs namespace primaire</li>
+<li>Compute pour ingestion</li>
+</ul>
+<p><strong>Région secondaire</strong> (ex: North Europe):</p>
+<ul>
+<li>Cluster ADX en standby ou lecture</li>
+<li>Réplication via Follower Database</li>
+<li>Disaster Recovery: RPO &lt; 1h, RTO &lt; 4h</li>
+</ul>
+<h3 id="r%C3%A9seau-et-connectivit%C3%A9">Réseau et Connectivité</h3>
+<ul>
+<li><strong>Virtual Network</strong>: Intégration VNet pour isolation</li>
+<li><strong>Private Endpoints</strong>: Connexions privées pour ADX</li>
+<li><strong>Service Endpoints</strong>: Event Hubs, Storage sécurisés</li>
+<li><strong>Firewall</strong>: IP whitelisting sur cluster ADX</li>
+</ul>
+<h2 id="flux-de-donn%C3%A9es">Flux de Données</h2>
+<ol>
+<li><strong>Génération de logs</strong> → Applications/Services</li>
+<li><strong>Collection</strong> → Agents (Fluentd, Logstash, Azure Monitor Agent)</li>
+<li><strong>Streaming</strong> → Event Hubs (buffering)</li>
+<li><strong>Ingestion</strong> → ADX (compression, indexation)</li>
+<li><strong>Transformation</strong> → Update policies (enrichissement)</li>
+<li><strong>Stockage</strong> → Tiered storage (hot → warm → cold)</li>
+<li><strong>Analyse</strong> → KQL queries via portails/APIs</li>
+<li><strong>Visualisation</strong> → Power BI, Grafana, Azure Dashboards</li>
+</ol>
+<h2 id="patterns-dusage">Patterns d'Usage</h2>
+<h3 id="use-case-1-monitoring-temps-r%C3%A9el">Use Case 1: Monitoring Temps Réel</h3>
+<ul>
+<li>Dashboards en temps réel (rafraîchissement 30s)</li>
+<li>Alertes automatiques sur anomalies</li>
+<li>Latence: &lt; 2 minutes end-to-end</li>
+</ul>
+<h3 id="use-case-2-investigations-de-s%C3%A9curit%C3%A9">Use Case 2: Investigations de Sécurité</h3>
+<ul>
+<li>Requêtes ad-hoc sur 90 jours de données</li>
+<li>Corrélation d'événements complexes</li>
+<li>Time to insight: Secondes à minutes</li>
+</ul>
+<h3 id="use-case-3-analytics-historiques">Use Case 3: Analytics Historiques</h3>
+<ul>
+<li>Tendances mensuelles/annuelles</li>
+<li>Capacité planning</li>
+<li>Requêtes sur cold storage: Minutes</li>
+</ul>
+<h2 id="int%C3%A9grations">Intégrations</h2>
+<h3 id="sources-de-logs">Sources de Logs</h3>
+<ul>
+<li><strong>Azure</strong>: Application Insights, Azure Monitor, Activity Logs</li>
+<li><strong>On-premises</strong>: Syslog, Windows Events via agents</li>
+<li><strong>Applications</strong>: Logs applicatifs JSON/structurés</li>
+<li><strong>Sécurité</strong>: Firewall logs, IDS/IPS, WAF</li>
+</ul>
+<h3 id="consommateurs">Consommateurs</h3>
+<ul>
+<li><strong>Power BI</strong>: Dashboards exécutifs</li>
+<li><strong>Grafana</strong>: Dashboards opérationnels</li>
+<li><strong>Azure Logic Apps</strong>: Automatisation basée sur requêtes</li>
+<li><strong>APIs REST</strong>: Intégration applications custom</li>
+<li><strong>ADX Web UI</strong>: Exploration interactive</li>
+</ul>
+<h2 id="%C3%A9volutivit%C3%A9">Évolutivité</h2>
+<h3 id="scaling-vertical">Scaling Vertical</h3>
+<ul>
+<li>Augmentation SKU des nœuds (E8 → E16 → E32 → E64)</li>
+<li>Impact: Plus de RAM, CPU pour requêtes complexes</li>
+</ul>
+<h3 id="scaling-horizontal">Scaling Horizontal</h3>
+<ul>
+<li>Ajout de nœuds au cluster</li>
+<li>Impact: Plus de débit d'ingestion et parallélisme des requêtes</li>
+</ul>
+<h3 id="auto-scaling">Auto-scaling</h3>
+<ul>
+<li>Configuration basée sur:
+<ul>
+<li>CPU utilization (&gt; 70%)</li>
+<li>Ingestion queue depth</li>
+<li>Query latency metrics</li>
+</ul>
+</li>
+</ul>
+<h2 id="monitoring-et-observabilit%C3%A9">Monitoring et Observabilité</h2>
+<h3 id="m%C3%A9triques-cl%C3%A9s">Métriques clés</h3>
+<ul>
+<li>
+<p><strong>Ingestion</strong>:</p>
+<ul>
+<li>Events ingested/sec</li>
+<li>Ingestion latency</li>
+<li>Failed ingestions</li>
+</ul>
+</li>
+<li>
+<p><strong>Query Performance</strong>:</p>
+<ul>
+<li>Query duration (p50, p95, p99)</li>
+<li>Queries per second</li>
+<li>Cache hit ratio</li>
+</ul>
+</li>
+<li>
+<p><strong>Ressources</strong>:</p>
+<ul>
+<li>CPU/Memory utilization</li>
+<li>Disk IOPS</li>
+<li>Network throughput</li>
+</ul>
+</li>
+</ul>
+<h3 id="outils-de-monitoring">Outils de Monitoring</h3>
+<ul>
+<li><strong>Azure Monitor</strong>: Métriques et alertes</li>
+<li><strong>ADX Insights</strong>: Dashboard intégré</li>
+<li><strong>Log Analytics</strong>: Meta-monitoring des logs ADX</li>
+<li><strong>Application Insights</strong>: Pour applications connectées</li>
+</ul>
+<h2 id="haute-disponibilit%C3%A9">Haute Disponibilité</h2>
+<h3 id="r%C3%A9silience-du-cluster">Résilience du Cluster</h3>
+<ul>
+<li><strong>Nœuds multiples</strong>: Minimum 3 nœuds pour HA</li>
+<li><strong>Réplication</strong>: Data repliquée sur multiple nœuds</li>
+<li><strong>Zone Redundancy</strong>: Distribution sur Availability Zones</li>
+</ul>
+<h3 id="disaster-recovery">Disaster Recovery</h3>
+<ul>
+<li><strong>Follower Databases</strong>: Lecture seule en région secondaire</li>
+<li><strong>Backup</strong>: Continuous export vers Storage</li>
+<li><strong>Recovery</strong>: Restore from Storage ou promote follower</li>
+</ul>
+<h2 id="optimisations">Optimisations</h2>
+<h3 id="performance">Performance</h3>
+<ol>
+<li><strong>Partitioning</strong>: Par date (colonnes datetime)</li>
+<li><strong>Materialized Views</strong>: Pré-agrégations pour requêtes fréquentes</li>
+<li><strong>Cache Policy</strong>: Optimisation du hot cache</li>
+<li><strong>Extent Management</strong>: Merge policy pour petits extents</li>
+</ol>
+<h3 id="co%C3%BBts">Coûts</h3>
+<ol>
+<li><strong>Tiered Storage</strong>: Données froides en Azure Storage</li>
+<li><strong>Reserved Capacity</strong>: Réservations 1-3 ans</li>
+<li><strong>Continuous Export</strong>: Archive vers Blob Storage</li>
+<li><strong>Auto-pause</strong>: Dev/Test clusters en dehors heures</li>
+</ol>
+<h2 id="conformit%C3%A9-et-gouvernance">Conformité et Gouvernance</h2>
+<h3 id="data-governance">Data Governance</h3>
+<ul>
+<li><strong>Data Classification</strong>: Tags sur tables/colonnes</li>
+<li><strong>Retention Policies</strong>: Automatiques par table</li>
+<li><strong>Data Lineage</strong>: Tracking via metadata</li>
+</ul>
+<h3 id="audit-et-logging">Audit et Logging</h3>
+<ul>
+<li><strong>Audit Logs</strong>: Toutes opérations DDL/DML</li>
+<li><strong>Query Audit</strong>: Tracking des queries utilisateurs</li>
+<li><strong>Access Logs</strong>: Connexions et authentifications</li>
+</ul>
+<h2 id="roadmap-et-%C3%A9volution">Roadmap et Évolution</h2>
+<h3 id="phase-1-mois-1-2-foundation">Phase 1 (Mois 1-2): Foundation</h3>
+<ul>
+<li>Déploiement cluster ADX de base</li>
+<li>Ingestion batch via Storage</li>
+<li>Requêtes KQL basiques</li>
+</ul>
+<h3 id="phase-2-mois-3-4-optimisation">Phase 2 (Mois 3-4): Optimisation</h3>
+<ul>
+<li>Migration vers streaming Event Hubs</li>
+<li>Update policies pour enrichissement</li>
+<li>Dashboards Power BI/Grafana</li>
+</ul>
+<h3 id="phase-3-mois-5-6-scaling">Phase 3 (Mois 5-6): Scaling</h3>
+<ul>
+<li>Multi-region setup</li>
+<li>Optimisations performance avancées</li>
+<li>Intégrations additionnelles</li>
+</ul>
+<h3 id="phase-4-mois-6-excellence-op%C3%A9rationnelle">Phase 4 (Mois 6+): Excellence Opérationnelle</h3>
+<ul>
+<li>Auto-scaling automation</li>
+<li>ML pour détection anomalies</li>
+<li>Self-service analytics pour équipes</li>
+</ul>
+<h2 id="r%C3%A9f%C3%A9rences">Références</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/">Azure Data Explorer Documentation</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kql-quick-reference">KQL Quick Reference</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/best-practices">ADX Best Practices</a></li>
+<li><a href="https://azure.microsoft.com/pricing/calculator/">Pricing Calculator</a></li>
+</ul>
+<h2 id="documents-connexes">Documents Connexes</h2>
+<ul>
+<li><a href="./adx-solution.md">Solution Technique ADX</a></li>
+<li><a href="./kql-examples.md">Exemples KQL</a></li>
+<li><a href="./data-ingestion.md">Stratégie d'Ingestion</a></li>
+<li><a href="./cost-estimation.md">Estimation de Coûts</a></li>
+<li><a href="./diagrams/">Diagrammes d'Architecture</a></li>
+</ul>
+<h1 id="estimation-financi%C3%A8re---solution-azure-data-explorer-5tbjour">Estimation Financière - Solution Azure Data Explorer 5TB/Jour</h1>
+<h2 id="r%C3%A9sum%C3%A9-ex%C3%A9cutif">Résumé Exécutif</h2>
+<p>Cette estimation financière détaille les coûts mensuels et annuels d'une solution Azure Data Explorer pour l'analyse de <strong>5 TB de logs par jour</strong>.</p>
+<h3 id="co%C3%BBts-mensuels-estim%C3%A9s">Coûts Mensuels Estimés</h3>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th style="text-align:right">Coût Mensuel (USD)</th>
+<th style="text-align:right">% du Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Azure Data Explorer Cluster</strong></td>
+<td style="text-align:right">$13,824</td>
+<td style="text-align:right">68%</td>
+</tr>
+<tr>
+<td><strong>Event Hubs</strong></td>
+<td style="text-align:right">$3,456</td>
+<td style="text-align:right">17%</td>
+</tr>
+<tr>
+<td><strong>Stockage (Hot + Cold)</strong></td>
+<td style="text-align:right">$2,160</td>
+<td style="text-align:right">11%</td>
+</tr>
+<tr>
+<td><strong>Network Egress</strong></td>
+<td style="text-align:right">$500</td>
+<td style="text-align:right">2%</td>
+</tr>
+<tr>
+<td><strong>Monitoring &amp; Management</strong></td>
+<td style="text-align:right">$400</td>
+<td style="text-align:right">2%</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td style="text-align:right"><strong>$20,340</strong></td>
+<td style="text-align:right"><strong>100%</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="co%C3%BBts-annuels-244080">Coûts Annuels: <strong>~$244,080</strong></h3>
+<hr>
+<h2 id="d%C3%A9tail-par-composant">Détail par Composant</h2>
+<h3 id="1-azure-data-explorer-adx---cluster-principal">1. Azure Data Explorer (ADX) - Cluster Principal</h3>
+<h4 id="configuration-recommand%C3%A9e">Configuration Recommandée</h4>
+<p><strong>Cluster Compute</strong>:</p>
+<ul>
+<li><strong>SKU</strong>: Standard_E16s_v5
+<ul>
+<li>vCPUs: 16 cores</li>
+<li>RAM: 128 GB</li>
+<li>SSD Cache: 512 GB</li>
+</ul>
+</li>
+<li><strong>Nombre de nœuds</strong>: 8 nœuds</li>
+<li><strong>Région</strong>: West Europe (exemple)</li>
+</ul>
+<h4 id="calcul-des-co%C3%BBts-adx">Calcul des Coûts ADX</h4>
+<p><strong>Prix unitaire</strong> (West Europe, tarifs juin 2024):</p>
+<ul>
+<li>Standard_E16s_v5: ~$1.44/heure/nœud</li>
+</ul>
+<p><strong>Coût mensuel</strong>:</p>
+<pre class="hljs"><code><div>8 nœuds × $1.44/h × 730h/mois = $8,409.60/mois
+</div></code></pre>
+<p><strong>Markup Azure</strong>: ~20% pour gestion et overhead = <strong>$10,091/mois</strong></p>
+<h4 id="options-de-r%C3%A9duction-des-co%C3%BBts">Options de Réduction des Coûts</h4>
+<p><strong>Reserved Instances (1 an)</strong>:</p>
+<ul>
+<li>Réduction: ~38%</li>
+<li>Nouveau coût: <strong>$6,256/mois</strong> (~$75,000/an)</li>
+<li>Économie: <strong>$3,835/mois</strong> ($46,000/an)</li>
+</ul>
+<p><strong>Reserved Instances (3 ans)</strong>:</p>
+<ul>
+<li>Réduction: ~62%</li>
+<li>Nouveau coût: <strong>$3,835/mois</strong> (~$46,000/an)</li>
+<li>Économie: <strong>$6,256/mois</strong> ($75,000/an)</li>
+</ul>
+<h4 id="dimensionnement-alternatif">Dimensionnement Alternatif</h4>
+<table>
+<thead>
+<tr>
+<th>Configuration</th>
+<th>Nœuds</th>
+<th>SKU</th>
+<th style="text-align:right">Coût/mois</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimal</strong></td>
+<td>6</td>
+<td>E8s_v5</td>
+<td style="text-align:right">$4,200</td>
+<td>Dev/Test</td>
+</tr>
+<tr>
+<td><strong>Standard</strong></td>
+<td>8</td>
+<td>E16s_v5</td>
+<td style="text-align:right">$10,091</td>
+<td>Production (baseline)</td>
+</tr>
+<tr>
+<td><strong>Optimisé</strong></td>
+<td>8</td>
+<td>E16s_v5 + RI 3ans</td>
+<td style="text-align:right">$3,835</td>
+<td>Production (optimisé)</td>
+</tr>
+<tr>
+<td><strong>Premium</strong></td>
+<td>10</td>
+<td>E16s_v5</td>
+<td style="text-align:right">$12,614</td>
+<td>Peak loads, HA</td>
+</tr>
+<tr>
+<td><strong>Enterprise</strong></td>
+<td>12</td>
+<td>E32s_v5</td>
+<td style="text-align:right">$34,560</td>
+<td>High concurrency</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Recommandation</strong>: Commencer avec configuration Standard, puis optimiser avec Reserved Instances après 3-6 mois.</p>
+<h4 id="co%C3%BBt-stockage-adx-hot-storage">Coût Stockage ADX (Hot Storage)</h4>
+<p><strong>Hot Storage</strong> (90 jours de rétention):</p>
+<ul>
+<li>Volume brut: 5 TB/jour × 90 jours = 450 TB</li>
+<li>Après compression 10:1: 45 TB</li>
+<li>Prix: ~$0.08/GB/mois</li>
+<li>Coût mensuel: 45,000 GB × $0.08 = <strong>$3,600/mois</strong></li>
+</ul>
+<p><strong>Hot Cache</strong> (SSD, inclus dans compute):</p>
+<ul>
+<li>Capacité: 8 nœuds × 512 GB = 4 TB</li>
+<li>Rétention: 7-14 jours</li>
+<li>Coût: <strong>Inclus dans le coût des nœuds</strong></li>
+</ul>
+<p><strong>Total ADX (Compute + Hot Storage)</strong>: <strong>$13,691/mois</strong> (sans RI)</p>
+<hr>
+<h3 id="2-azure-event-hubs">2. Azure Event Hubs</h3>
+<h4 id="configuration-recommand%C3%A9e">Configuration Recommandée</h4>
+<p><strong>Namespace</strong>:</p>
+<ul>
+<li><strong>Tier</strong>: Standard</li>
+<li><strong>Throughput Units (TU)</strong>: 10 TU base, auto-inflate jusqu'à 20 TU</li>
+<li><strong>Partitions</strong>: 32 partitions</li>
+<li><strong>Retention</strong>: 1 jour</li>
+</ul>
+<h4 id="calcul-des-co%C3%BBts-event-hub">Calcul des Coûts Event Hub</h4>
+<p><strong>Coûts de base</strong>:</p>
+<ul>
+<li>Base namespace (Standard): ~$10/mois</li>
+<li>Throughput Units: $30/TU/mois</li>
+<li>Average TUs utilisés: ~10 TU</li>
+<li>Ingress events: 5 TB/jour ÷ 500 bytes/event = ~10 milliards events/jour</li>
+</ul>
+<p><strong>Coûts mensuels</strong>:</p>
+<pre class="hljs"><code><div>Base: $10/mois
+Throughput: 10 TU × $30 = $300/mois
+Ingress events: 10B events/jour × 30 jours = 300B events/mois
+  300B events ÷ 1M = 300,000 million events
+  Premier 100M: Gratuit
+  200M-6000M: $0.028/million = 5,900 × $0.028 = $165.20
+  Restant: 294,100M × $0.011 = $3,235.10
+
+Total Event Hub: ~$3,710/mois
+</div></code></pre>
+<p><strong>Estimation simplifiée</strong>: <strong>$3,456/mois</strong> (avec optimisations)</p>
+<h4 id="options-alternatives">Options Alternatives</h4>
+<p><strong>Premium Tier</strong>:</p>
+<ul>
+<li>Processing Units (PU): 1 PU</li>
+<li>Coût: ~$672/PU/mois</li>
+<li>Avantages: VNet isolation, plus de capacité</li>
+<li>Recommandé si: Besoin isolation réseau forte</li>
+</ul>
+<p><strong>Dedicated Cluster</strong>:</p>
+<ul>
+<li>Capacity Units (CU): 1 CU</li>
+<li>Coût: ~$8,760/mois</li>
+<li>Avantages: Dédié, prévisible, pas de throttling</li>
+<li>Recommandé si: &gt; 10 TB/jour ou très strict SLA</li>
+</ul>
+<hr>
+<h3 id="3-azure-blob-storage">3. Azure Blob Storage</h3>
+<h4 id="configuration-pour-stockage-froid">Configuration pour Stockage Froid</h4>
+<p><strong>Cold Storage</strong> (1-2 ans au-delà de hot):</p>
+<ul>
+<li>Volume: 5 TB/jour × 365 jours = 1,825 TB/an</li>
+<li>Après compression 10:1: 182.5 TB/an</li>
+<li>Stratégie: Déplacer données &gt; 90 jours vers Blob Cool Tier</li>
+</ul>
+<p><strong>Année 1</strong>:</p>
+<ul>
+<li>Volume moyen: 91 TB (rampe progressive)</li>
+<li>Prix Cool Tier: ~$0.0184/GB/mois</li>
+<li>Coût: 91,000 GB × $0.0184 = <strong>$1,674/mois</strong></li>
+</ul>
+<p><strong>Année 2</strong> (steady state):</p>
+<ul>
+<li>Volume: 182.5 TB</li>
+<li>Coût: 182,500 GB × $0.0184 = <strong>$3,358/mois</strong></li>
+</ul>
+<p><strong>Coût moyen Année 1-2</strong>: <strong>$2,516/mois</strong></p>
+<h4 id="transactions-et-operations">Transactions et Operations</h4>
+<p><strong>Continuous Export</strong> (ADX → Blob):</p>
+<ul>
+<li>Write operations: ~100,000/jour</li>
+<li>Coût write: $0.10/10,000 ops</li>
+<li>Coût mensuel: 3M ops × $0.01 = <strong>$30/mois</strong></li>
+</ul>
+<p><strong>Read operations</strong> (requêtes cold data):</p>
+<ul>
+<li>Estimé: 10,000/jour</li>
+<li>Coût: Marginal (~$5/mois)</li>
+</ul>
+<h4 id="batch-ingestion-si-utilis%C3%A9-au-lieu-event-hub">Batch Ingestion (si utilisé au lieu Event Hub)</h4>
+<p><strong>Alternative moins chère pour ingestion</strong>:</p>
+<ul>
+<li>Stockage temporaire: ~500 GB (1 jour buffer)</li>
+<li>Coût: 500 GB × $0.0184 = $9.20/mois</li>
+<li>Lifecycle policy: Suppression automatique après 2 jours</li>
+</ul>
+<p><strong>Total Stockage</strong>: <strong>$1,674/mois</strong> (Année 1) → <strong>$3,358/mois</strong> (Année 2)</p>
+<hr>
+<h3 id="4-r%C3%A9seau-network-egress">4. Réseau (Network Egress)</h3>
+<h4 id="transferts-de-donn%C3%A9es">Transferts de Données</h4>
+<p><strong>Intra-Azure</strong>:</p>
+<ul>
+<li>Event Hub → ADX (même région): <strong>Gratuit</strong></li>
+<li>Blob → ADX (même région): <strong>Gratuit</strong></li>
+<li>ADX → Follower DB (autre région): $0.05/GB</li>
+</ul>
+<p><strong>Internet Egress</strong> (API queries, dashboards):</p>
+<ul>
+<li>Estimé: 2 TB/mois (dashboards, APIs, exports)</li>
+<li>Prix zone 1 (Europe): $0.087/GB (premiers 10 TB)</li>
+<li>Coût: 2,000 GB × $0.087 = <strong>$174/mois</strong></li>
+</ul>
+<p><strong>Power BI/Grafana Queries</strong>:</p>
+<ul>
+<li>Queries retournent généralement agrégats (petits volumes)</li>
+<li>Estimé: 500 GB/mois</li>
+<li>Coût: 500 GB × $0.087 = <strong>$43.50/mois</strong></li>
+</ul>
+<p><strong>Total Network</strong>: <strong>$500/mois</strong> (estimation conservative)</p>
+<hr>
+<h3 id="5-monitoring-et-management">5. Monitoring et Management</h3>
+<h4 id="azure-monitor">Azure Monitor</h4>
+<p><strong>Métriques et Logs</strong>:</p>
+<ul>
+<li>Métriques ADX: 100 métriques × $0.10 = $10/mois</li>
+<li>Log ingestion (monitoring ADX): 50 GB/mois × $2.76/GB = $138/mois</li>
+<li>Log retention: 30 jours (standard)</li>
+</ul>
+<p><strong>Total Azure Monitor</strong>: <strong>$148/mois</strong></p>
+<h4 id="alertes-et-actions">Alertes et Actions</h4>
+<p><strong>Alertes</strong>:</p>
+<ul>
+<li>~20 règles d'alerte</li>
+<li>Coût: $0.10/règle/mois = $2/mois</li>
+<li>Evaluations: Incluses (premières 1000 gratuites)</li>
+</ul>
+<p><strong>Action Groups</strong>:</p>
+<ul>
+<li>Email notifications: Gratuit</li>
+<li>Logic Apps triggers: ~$50/mois</li>
+</ul>
+<p><strong>Total Alertes</strong>: <strong>$52/mois</strong></p>
+<h4 id="management-overhead">Management Overhead</h4>
+<p><strong>Azure Advisor, Security Center, etc.</strong>:</p>
+<ul>
+<li>Standard tier: ~$200/mois</li>
+<li>Inclut: Recommendations, security scanning, compliance</li>
+</ul>
+<p><strong>Total Monitoring &amp; Management</strong>: <strong>$400/mois</strong></p>
+<hr>
+<h3 id="6-services-additionnels">6. Services Additionnels</h3>
+<h4 id="power-bi-optionnel">Power BI (Optionnel)</h4>
+<p><strong>Power BI Premium Per User</strong>:</p>
+<ul>
+<li>~10 utilisateurs analystes</li>
+<li>$20/user/mois = <strong>$200/mois</strong></li>
+</ul>
+<p><strong>Power BI Embedded</strong> (pour dashboards publics):</p>
+<ul>
+<li>A1 capacity: $1/heure = ~$730/mois</li>
+<li>Recommandé si: Dashboards pour &gt;100 users</li>
+</ul>
+<h4 id="grafana-open-source">Grafana (Open Source)</h4>
+<p><strong>Self-hosted sur AKS</strong>:</p>
+<ul>
+<li>2 nœuds B4ms: ~$160/mois</li>
+<li>Stockage: ~$40/mois</li>
+<li>Total: <strong>$200/mois</strong></li>
+</ul>
+<p><strong>Grafana Cloud</strong> (Alternative):</p>
+<ul>
+<li>Pro plan: $299/mois</li>
+</ul>
+<h4 id="azure-key-vault">Azure Key Vault</h4>
+<p><strong>Stockage de secrets</strong>:</p>
+<ul>
+<li>~50 secrets</li>
+<li>Coût: $0.03/10,000 ops</li>
+<li>Total: ~$5/mois (négligeable)</li>
+</ul>
+<h4 id="private-endpoints">Private Endpoints</h4>
+<p><strong>Connexions privées</strong>:</p>
+<ul>
+<li>ADX: $10/mois</li>
+<li>Event Hub: $10/mois</li>
+<li>Storage: $10/mois</li>
+<li>Total: <strong>$30/mois</strong></li>
+</ul>
+<hr>
+<h2 id="sc%C3%A9narios-de-co%C3%BBts">Scénarios de Coûts</h2>
+<h3 id="sc%C3%A9nario-1-production-optimis%C3%A9e-recommand%C3%A9">Scénario 1: Production Optimisée (Recommandé)</h3>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th style="text-align:right">Coût Mensuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADX Cluster (8 × E16s_v5, RI 3 ans)</td>
+<td style="text-align:right">$3,835</td>
+</tr>
+<tr>
+<td>ADX Hot Storage (90 jours)</td>
+<td style="text-align:right">$3,600</td>
+</tr>
+<tr>
+<td>Event Hubs (Standard, 10 TU)</td>
+<td style="text-align:right">$3,456</td>
+</tr>
+<tr>
+<td>Blob Cold Storage</td>
+<td style="text-align:right">$1,674</td>
+</tr>
+<tr>
+<td>Network</td>
+<td style="text-align:right">$500</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td style="text-align:right">$400</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td style="text-align:right"><strong>$13,465/mois</strong></td>
+</tr>
+<tr>
+<td><strong>ANNUEL</strong></td>
+<td style="text-align:right"><strong>$161,580</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Avec Power BI et Grafana</strong>: <strong>$13,865/mois</strong> ($166,380/an)</p>
+<hr>
+<h3 id="sc%C3%A9nario-2-startup--co%C3%BBt-minimum">Scénario 2: Startup / Coût Minimum</h3>
+<p><strong>Optimisations</strong>:</p>
+<ul>
+<li>ADX: 6 nœuds E8s_v5 (au lieu de 8 × E16s_v5)</li>
+<li>Event Hub remplacé par Blob batch ingestion</li>
+<li>Hot storage: 30 jours (au lieu de 90)</li>
+<li>Pas de Reserved Instances (flexibilité)</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th style="text-align:right">Coût Mensuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADX Cluster (6 × E8s_v5)</td>
+<td style="text-align:right">$3,150</td>
+</tr>
+<tr>
+<td>ADX Hot Storage (30 jours)</td>
+<td style="text-align:right">$1,200</td>
+</tr>
+<tr>
+<td>Blob Ingestion + Storage</td>
+<td style="text-align:right">$150</td>
+</tr>
+<tr>
+<td>Network</td>
+<td style="text-align:right">$300</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td style="text-align:right">$200</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td style="text-align:right"><strong>$5,000/mois</strong></td>
+</tr>
+<tr>
+<td><strong>ANNUEL</strong></td>
+<td style="text-align:right"><strong>$60,000</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Trade-offs</strong>:</p>
+<ul>
+<li>⚠️ Latence ingestion: 5-15 minutes (vs &lt;2 min)</li>
+<li>⚠️ Moins de ressources pour queries complexes</li>
+<li>⚠️ Rétention hot réduite (30j vs 90j)</li>
+</ul>
+<hr>
+<h3 id="sc%C3%A9nario-3-enterprise-avec-ha-multi-r%C3%A9gion">Scénario 3: Enterprise avec HA Multi-région</h3>
+<p><strong>Ajouts</strong>:</p>
+<ul>
+<li>Cluster secondaire (follower): 50% du coût primaire</li>
+<li>Geo-replication pour stockage</li>
+<li>Premium Event Hubs</li>
+<li>Multi-region networking</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th style="text-align:right">Coût Mensuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADX Cluster Primaire (RI 3 ans)</td>
+<td style="text-align:right">$7,435</td>
+</tr>
+<tr>
+<td>ADX Cluster Secondaire (follower)</td>
+<td style="text-align:right">$3,718</td>
+</tr>
+<tr>
+<td>Event Hubs Premium</td>
+<td style="text-align:right">$672</td>
+</tr>
+<tr>
+<td>Blob Storage (GRS)</td>
+<td style="text-align:right">$3,348</td>
+</tr>
+<tr>
+<td>Network (multi-region)</td>
+<td style="text-align:right">$1,500</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td style="text-align:right">$600</td>
+</tr>
+<tr>
+<td><strong>TOTAL</strong></td>
+<td style="text-align:right"><strong>$17,273/mois</strong></td>
+</tr>
+<tr>
+<td><strong>ANNUEL</strong></td>
+<td style="text-align:right"><strong>$207,276</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Avantages</strong>:</p>
+<ul>
+<li>✅ RPO &lt; 15 minutes</li>
+<li>✅ RTO &lt; 1 heure</li>
+<li>✅ Lecture distribuée (performance)</li>
+<li>✅ SLA 99.99%</li>
+</ul>
+<hr>
+<h2 id="%C3%A9volution-des-co%C3%BBts-sur-3-ans">Évolution des Coûts sur 3 Ans</h2>
+<h3 id="projection-sc%C3%A9nario-production-optimis%C3%A9e">Projection (Scénario Production Optimisée)</h3>
+<p><strong>Hypothèses</strong>:</p>
+<ul>
+<li>Croissance volume: 10% par an</li>
+<li>Pas d'augmentation des prix Azure (conservatif)</li>
+<li>Reserved Instances renouvelées</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Année</th>
+<th>Volume/Jour</th>
+<th>ADX Compute</th>
+<th>Storage Total</th>
+<th>Event Hub</th>
+<th>Total Mensuel</th>
+<th>Total Annuel</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>An 1</strong></td>
+<td>5 TB</td>
+<td>$7,435</td>
+<td>$3,600</td>
+<td>$3,456</td>
+<td>$15,291</td>
+<td>$183,492</td>
+</tr>
+<tr>
+<td><strong>An 2</strong></td>
+<td>5.5 TB</td>
+<td>$7,435</td>
+<td>$7,258</td>
+<td>$3,802</td>
+<td>$18,795</td>
+<td>$225,540</td>
+</tr>
+<tr>
+<td><strong>An 3</strong></td>
+<td>6 TB</td>
+<td>$8,179</td>
+<td>$10,910</td>
+<td>$4,182</td>
+<td>$23,571</td>
+<td>$282,852</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: An 1 Storage = Hot uniquement; An 2+ inclut accumulation de cold storage.</p>
+<hr>
+<h2 id="optimisations-des-co%C3%BBts">Optimisations des Coûts</h2>
+<h3 id="1-reserved-instances-ri">1. Reserved Instances (RI)</h3>
+<p><strong>Impact</strong>:</p>
+<ul>
+<li>1 an: -38% compute → Économie $46,000/an</li>
+<li>3 ans: -62% compute → Économie $75,000/an</li>
+</ul>
+<p><strong>Recommandation</strong>: RI 3 ans après 6 mois de validation.</p>
+<h3 id="2-tiered-storage-strategy">2. Tiered Storage Strategy</h3>
+<p><strong>Stratégie</strong>:</p>
+<pre class="hljs"><code><div>Hot Cache (SSD): 7 jours → Requêtes critiques
+Hot Storage: 30 jours → Requêtes fréquentes  
+Cold Storage (Blob): 31-365 jours → Historique
+Archive: &gt;1 an → Compliance
+</div></code></pre>
+<p><strong>Impact</strong>: Réduction stockage de <strong>40-60%</strong></p>
+<h3 id="3-compression-et-formats">3. Compression et Formats</h3>
+<p><strong>Parquet vs JSON</strong>:</p>
+<ul>
+<li>Parquet: 50-70% plus petit</li>
+<li>Impact: Réduction Event Hub throughput (moins de TUs)</li>
+<li>Économie estimée: <strong>$500-800/mois</strong></li>
+</ul>
+<h3 id="4-batch-au-lieu-de-streaming-si-acceptable">4. Batch au lieu de Streaming (si acceptable)</h3>
+<p><strong>Remplacement Event Hub par Blob</strong>:</p>
+<ul>
+<li>Économie: ~$3,456/mois</li>
+<li>Trade-off: Latence 5-15 min (vs &lt;2 min)</li>
+<li><strong>Recommandé pour</strong>: Dev/test, logs non-critiques</li>
+</ul>
+<h3 id="5-query-optimization">5. Query Optimization</h3>
+<p><strong>Materialized Views</strong>:</p>
+<ul>
+<li>Pré-agrégations pour dashboards fréquents</li>
+<li>Réduction compute jusqu'à <strong>70%</strong> pour ces queries</li>
+</ul>
+<p><strong>Cache Policy Tuning</strong>:</p>
+<ul>
+<li>Identifier queries fréquentes</li>
+<li>Ajuster hot cache (7-14 jours)</li>
+<li>Impact: P95 latency −50%</li>
+</ul>
+<h3 id="6-cleanup--retention-policies">6. Cleanup &amp; Retention Policies</h3>
+<p><strong>Aggressive cleanup</strong>:</p>
+<ul>
+<li>Logs debug/trace: 30 jours seulement</li>
+<li>Logs info: 90 jours</li>
+<li>Logs error/critical: 1 an</li>
+</ul>
+<p><strong>Impact</strong>: Réduction storage de <strong>30-50%</strong></p>
+<h3 id="7-auto-scaling">7. Auto-scaling</h3>
+<p><strong>Metrics-based scaling</strong>:</p>
+<ul>
+<li>Scale down durant heures creuses</li>
+<li>Économie: <strong>15-25%</strong> (si usage variable)</li>
+<li>Exemple: 8 nœuds peak, 5 nœuds off-hours</li>
+</ul>
+<hr>
+<h2 id="comparaison-avec-alternatives">Comparaison avec Alternatives</h2>
+<h3 id="azure-data-explorer-vs-alternatives">Azure Data Explorer vs Alternatives</h3>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th style="text-align:right">Coût Mensuel Estimé</th>
+<th>Avantages</th>
+<th>Inconvénients</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ADX</strong></td>
+<td style="text-align:right"><strong>$13,465-20,340</strong></td>
+<td>Performance, KQL, intégration Azure</td>
+<td>Coût compute élevé</td>
+</tr>
+<tr>
+<td><strong>Elasticsearch (self-hosted AKS)</strong></td>
+<td style="text-align:right">$8,000-12,000</td>
+<td>Mature, flexible</td>
+<td>Gestion complexe, HA difficile</td>
+</tr>
+<tr>
+<td><strong>Elastic Cloud</strong></td>
+<td style="text-align:right">$15,000-25,000</td>
+<td>Managé, ecosystem riche</td>
+<td>Coût élevé pour volume</td>
+</tr>
+<tr>
+<td><strong>Splunk Cloud</strong></td>
+<td style="text-align:right">$30,000-50,000</td>
+<td>Très mature, features riches</td>
+<td>Très cher (GB ingested)</td>
+</tr>
+<tr>
+<td><strong>Datadog Logs</strong></td>
+<td style="text-align:right">$25,000-40,000</td>
+<td>SaaS, simple</td>
+<td>Très cher à scale</td>
+</tr>
+<tr>
+<td><strong>Azure Log Analytics</strong></td>
+<td style="text-align:right">$18,000-28,000</td>
+<td>Intégré Azure Monitor</td>
+<td>Moins performant queries complexes</td>
+</tr>
+<tr>
+<td><strong>AWS OpenSearch</strong></td>
+<td style="text-align:right">$10,000-16,000</td>
+<td>Managé, scaling</td>
+<td>Pas Azure natif</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusion</strong>: ADX offre le <strong>meilleur ratio performance/coût</strong> pour 5TB/jour avec Azure.</p>
+<hr>
+<h2 id="roi-et-justification">ROI et Justification</h2>
+<h3 id="co%C3%BBts-%C3%A9vit%C3%A9s">Coûts Évités</h3>
+<p><strong>Sans solution centralisée</strong>:</p>
+<ul>
+<li>Dev time debugging: 100h/mois × $100/h = $10,000/mois</li>
+<li>Downtime costs: 2h/mois × $50,000/h = $100,000/mois (si e-commerce)</li>
+<li>Incidents non détectés: Incalculable</li>
+</ul>
+<p><strong>Avec ADX</strong>:</p>
+<ul>
+<li>Time to insight: Minutes (vs heures/jours)</li>
+<li>Proactive detection: Éviter incidents</li>
+<li>Capacity planning: Optimiser infra</li>
+</ul>
+<p><strong>ROI estimé</strong>: 3-6 mois pour entreprises moyennes/grandes</p>
+<h3 id="b%C3%A9n%C3%A9fices-business">Bénéfices Business</h3>
+<p><strong>Quantifiables</strong>:</p>
+<ul>
+<li>↓ 60% temps debugging (équipes ops/dev)</li>
+<li>↓ 40% MTTR (Mean Time To Restore)</li>
+<li>↓ 30% incidents production (détection proactive)</li>
+</ul>
+<p><strong>Non-quantifiables</strong>:</p>
+<ul>
+<li>Meilleure compliance (audit trails)</li>
+<li>Insights business (analytics sur logs applicatifs)</li>
+<li>Confiance clients (moins de downtime)</li>
+</ul>
+<hr>
+<h2 id="recommandations-finales">Recommandations Finales</h2>
+<h3 id="phase-1-pilot-mois-1-3">Phase 1: Pilot (Mois 1-3)</h3>
+<p><strong>Budget</strong>: $5,000-7,000/mois</p>
+<ul>
+<li>Cluster minimal (6 nœuds E8s_v5)</li>
+<li>Blob ingestion batch</li>
+<li>30 jours hot storage</li>
+<li>Pas de RI (flexibilité)</li>
+</ul>
+<h3 id="phase-2-production-mois-4-6">Phase 2: Production (Mois 4-6)</h3>
+<p><strong>Budget</strong>: $15,000-18,000/mois</p>
+<ul>
+<li>Cluster production (8 nœuds E16s_v5)</li>
+<li>Event Hubs streaming</li>
+<li>90 jours hot storage</li>
+<li>Monitoring complet</li>
+</ul>
+<h3 id="phase-3-optimisation-mois-7-12">Phase 3: Optimisation (Mois 7-12)</h3>
+<p><strong>Budget</strong>: $13,000-15,000/mois</p>
+<ul>
+<li>Reserved Instances 3 ans</li>
+<li>Tiered storage optimisé</li>
+<li>Materialized views</li>
+<li>Auto-scaling</li>
+</ul>
+<h3 id="phase-4-scale--ha-ann%C3%A9e-2">Phase 4: Scale &amp; HA (Année 2+)</h3>
+<p><strong>Budget</strong>: $15,000-20,000/mois</p>
+<ul>
+<li>Multi-région si besoin</li>
+<li>Query optimizations</li>
+<li>ML pour anomaly detection</li>
+<li>Self-service analytics</li>
+</ul>
+<hr>
+<h2 id="checklist-budget">Checklist Budget</h2>
+<h3 id="mensuel">Mensuel</h3>
+<ul>
+<li><input type="checkbox" id="checkbox23"><label for="checkbox23">Azure Data Explorer compute</label></li>
+<li><input type="checkbox" id="checkbox24"><label for="checkbox24">ADX hot storage</label></li>
+<li><input type="checkbox" id="checkbox25"><label for="checkbox25">Event Hubs ou Blob Storage</label></li>
+<li><input type="checkbox" id="checkbox26"><label for="checkbox26">Network egress</label></li>
+<li><input type="checkbox" id="checkbox27"><label for="checkbox27">Azure Monitor</label></li>
+<li><input type="checkbox" id="checkbox28"><label for="checkbox28">Alertes et actions</label></li>
+</ul>
+<h3 id="optionnel">Optionnel</h3>
+<ul>
+<li><input type="checkbox" id="checkbox29"><label for="checkbox29">Power BI licenses</label></li>
+<li><input type="checkbox" id="checkbox30"><label for="checkbox30">Grafana hosting</label></li>
+<li><input type="checkbox" id="checkbox31"><label for="checkbox31">Private endpoints</label></li>
+<li><input type="checkbox" id="checkbox32"><label for="checkbox32">Follower database (DR)</label></li>
+<li><input type="checkbox" id="checkbox33"><label for="checkbox33">Support Azure (Standard/Professional)</label></li>
+</ul>
+<h3 id="annuel">Annuel</h3>
+<ul>
+<li><input type="checkbox" id="checkbox34"><label for="checkbox34">Reserved Instances (renouvellement)</label></li>
+<li><input type="checkbox" id="checkbox35"><label for="checkbox35">Storage lifecycle optimization review</label></li>
+<li><input type="checkbox" id="checkbox36"><label for="checkbox36">Capacity planning update</label></li>
+<li><input type="checkbox" id="checkbox37"><label for="checkbox37">Cost optimization audit</label></li>
+</ul>
+<hr>
+<h2 id="contacts-et-ressources">Contacts et Ressources</h2>
+<p><strong>Azure Pricing Calculator</strong>:
+https://azure.microsoft.com/pricing/calculator/</p>
+<p><strong>ADX Pricing Details</strong>:
+https://azure.microsoft.com/pricing/details/data-explorer/</p>
+<p><strong>Event Hubs Pricing</strong>:
+https://azure.microsoft.com/pricing/details/event-hubs/</p>
+<p><strong>Storage Pricing</strong>:
+https://azure.microsoft.com/pricing/details/storage/blobs/</p>
+<p><strong>Azure Cost Management</strong>:
+https://portal.azure.com/#blade/Microsoft_Azure_CostManagement</p>
+<hr>
+<h2 id="conclusion">Conclusion</h2>
+<p>Pour une solution d'analyse de <strong>5 TB de logs par jour</strong> avec Azure Data Explorer:</p>
+<p><strong>Coût Production Baseline</strong>: <strong>$15,000-20,000/mois</strong> ($180,000-240,000/an)</p>
+<p><strong>Coût Production Optimisé</strong>: <strong>$13,000-15,000/mois</strong> ($156,000-180,000/an)</p>
+<p><strong>Recommandation</strong>: Commencer avec configuration standard, valider pendant 3-6 mois, puis optimiser avec Reserved Instances et tiered storage pour réduire les coûts de <strong>30-40%</strong>.</p>
+<p>Le <strong>ROI est positif</strong> dès 3-6 mois pour la majorité des entreprises grâce à la réduction du temps de debugging et la détection proactive d'incidents.</p>
+<h1 id="strat%C3%A9gie-dingestion-de-donn%C3%A9es">Stratégie d'Ingestion de Données</h1>
+<h2 id="vue-densemble">Vue d'ensemble</h2>
+<p>L'ingestion de 5TB de logs par jour (~208 GB/heure en moyenne) nécessite une architecture robuste, scalable et résiliente. Ce document détaille les différentes stratégies d'ingestion pour Azure Data Explorer.</p>
+<h2 id="volume-et-contraintes">Volume et Contraintes</h2>
+<h3 id="m%C3%A9triques-cibles">Métriques Cibles</h3>
+<ul>
+<li><strong>Volume quotidien</strong>: 5 TB (non compressé)</li>
+<li><strong>Débit moyen</strong>: ~208 GB/heure (~58 MB/seconde)</li>
+<li><strong>Débit peak</strong>: ~625 GB/heure (facteur 3x aux heures de pointe)</li>
+<li><strong>Latence souhaitée</strong>: &lt; 2 minutes end-to-end</li>
+<li><strong>Format principal</strong>: JSON structuré</li>
+<li><strong>Compression ratio</strong>: 10:1 (5TB → 500GB stocké)</li>
+</ul>
+<h3 id="contraintes-techniques">Contraintes Techniques</h3>
+<ul>
+<li><strong>Limites ADX</strong>:
+<ul>
+<li>Ingestion: ~200 GB/heure/nœud</li>
+<li>Fichiers optimaux: 100MB - 1GB</li>
+<li>Batch size: 1GB ou 1000 blobs</li>
+</ul>
+</li>
+<li><strong>Network</strong>: Bandwidth suffisant (10+ Gbps)</li>
+<li><strong>Event Hub</strong>: 32+ partitions recommandées</li>
+</ul>
+<h2 id="options-dingestion">Options d'Ingestion</h2>
+<h3 id="option-1-azure-event-hubs-streaming---%E2%AD%90-recommand%C3%A9">Option 1: Azure Event Hubs (Streaming) - ⭐ RECOMMANDÉ</h3>
+<h4 id="architecture">Architecture</h4>
+<pre class="hljs"><code><div>Applications/Services
+    ↓
+Agents de collecte (Fluentd/Logstash/Vector)
+    ↓
+Azure Event Hubs (32+ partitions)
+    ↓
+ADX Data Connection (Native integration)
+    ↓
+Azure Data Explorer Tables
+</div></code></pre>
+<h4 id="avantages">Avantages</h4>
+<ul>
+<li>✅ <strong>Faible latence</strong>: &lt; 30 secondes à 2 minutes</li>
+<li>✅ <strong>Découplage</strong>: Buffer entre producers et consumers</li>
+<li>✅ <strong>Résilience</strong>: Retry automatique, dead-letter queue</li>
+<li>✅ <strong>Scaling</strong>: Auto-inflate jusqu'à 40 TUs</li>
+<li>✅ <strong>Simplicité</strong>: Gestion automatique par ADX</li>
+</ul>
+<h4 id="configuration-event-hub">Configuration Event Hub</h4>
+<p><strong>Namespace</strong>:</p>
+<pre class="hljs"><code><div>az eventhubs namespace create \
+  --name <span class="hljs-string">"loganalysis-prod-eh"</span> \
+  --resource-group <span class="hljs-string">"rg-loganalysis-prod"</span> \
+  --location <span class="hljs-string">"westeurope"</span> \
+  --sku <span class="hljs-string">"Standard"</span> \
+  --<span class="hljs-built_in">enable</span>-auto-inflate <span class="hljs-literal">true</span> \
+  --maximum-throughput-units 20 \
+  --capacity 10
+</div></code></pre>
+<p><strong>Event Hub</strong>:</p>
+<pre class="hljs"><code><div>az eventhubs eventhub create \
+  --name <span class="hljs-string">"application-logs"</span> \
+  --namespace-name <span class="hljs-string">"loganalysis-prod-eh"</span> \
+  --partition-count 32 \
+  --message-retention 1 \
+  --cleanup-policy <span class="hljs-string">"Delete"</span>
+</div></code></pre>
+<p><strong>Paramètres clés</strong>:</p>
+<ul>
+<li><strong>Partitions</strong>: 32 (permet 32 MB/s = ~115 GB/h)</li>
+<li><strong>Throughput Units</strong>: 10-20 (1 TU = 1 MB/s ingress)</li>
+<li><strong>Retention</strong>: 1 jour (suffisant pour buffer)</li>
+<li><strong>Auto-inflate</strong>: Activé pour peaks</li>
+</ul>
+<h4 id="calcul-du-dimensionnement">Calcul du dimensionnement</h4>
+<pre class="hljs"><code><div>Débit peak: 625 GB/h = 173 MB/s
+Avec compression 2:1 (avant Event Hub): ~86 MB/s
+Throughput Units requis: 86 TU
+Avec auto-inflate: Commencer à 10 TU, scaler à 20 TU
+
+Partitions pour parallélisme ADX:
+32 partitions × 1 MB/s = 32 MB/s base
+Avec burst: ~100-150 MB/s
+Couverture: 86 MB/s ✓
+</div></code></pre>
+<h4 id="data-connection-adx">Data Connection ADX</h4>
+<pre class="hljs"><code><div>.create-or-alter table ApplicationLogs ingestion eventhub data connection 'ApplicationLogsConnection'
+```json
+{
+  &quot;properties&quot;: {
+    &quot;eventHubResourceId&quot;: &quot;/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.EventHub/namespaces/loganalysis-prod-eh/eventhubs/application-logs&quot;,
+    &quot;consumerGroup&quot;: &quot;adx-consumer&quot;,
+    &quot;tableName&quot;: &quot;ApplicationLogs&quot;,
+    &quot;mappingRuleName&quot;: &quot;ApplicationLogsMapping&quot;,
+    &quot;dataFormat&quot;: &quot;JSON&quot;,
+    &quot;compression&quot;: &quot;GZip&quot;,
+    &quot;eventSystemProperties&quot;: [&quot;x-opt-enqueued-time&quot;],
+    &quot;managedIdentityResourceId&quot;: &quot;/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.ManagedIdentity/userAssignedIdentities/adx-identity&quot;
+  }
+}
+</div></code></pre>
+<pre class="hljs"><code><div>
+#### Configuration des Agents de Collecte
+
+**Fluentd**:
+```yaml
+&lt;source&gt;
+  @type tail
+  path /var/log/application/*.log
+  pos_file /var/log/td-agent/application.log.pos
+  tag application.logs
+  format json
+  time_key timestamp
+  time_format %Y-%m-%dT%H:%M:%S.%LZ
+&lt;/source&gt;
+
+&lt;filter application.logs&gt;
+  @type record_transformer
+  enable_ruby true
+  &lt;record&gt;
+    hostname &quot;#{Socket.gethostname}&quot;
+    environment &quot;#{ENV['ENVIRONMENT']}&quot;
+    region &quot;#{ENV['AZURE_REGION']}&quot;
+  &lt;/record&gt;
+&lt;/filter&gt;
+
+&lt;match application.logs&gt;
+  @type azure_event_hubs
+  connection_string &quot;#{ENV['EVENT_HUB_CONNECTION_STRING']}&quot;
+  hub_name &quot;application-logs&quot;
+  
+  # Batching pour efficacité
+  &lt;buffer&gt;
+    @type file
+    path /var/log/td-agent/buffer/eventhub
+    flush_mode interval
+    flush_interval 10s
+    chunk_limit_size 5MB
+    total_limit_size 1GB
+    retry_type exponential_backoff
+    retry_max_interval 30s
+  &lt;/buffer&gt;
+  
+  # Compression
+  compress gzip
+&lt;/match&gt;
+</div></code></pre>
+<p><strong>Vector</strong> (Alternative moderne):</p>
+<pre class="hljs"><code><div><span class="hljs-section">[sources.application_logs]</span>
+<span class="hljs-attr">type</span> = <span class="hljs-string">"file"</span>
+<span class="hljs-attr">include</span> = [<span class="hljs-string">"/var/log/application/*.log"</span>]
+<span class="hljs-attr">data_dir</span> = <span class="hljs-string">"/var/lib/vector"</span>
+
+<span class="hljs-section">[transforms.parse_json]</span>
+<span class="hljs-attr">type</span> = <span class="hljs-string">"remap"</span>
+<span class="hljs-attr">inputs</span> = [<span class="hljs-string">"application_logs"</span>]
+<span class="hljs-attr">source</span> = <span class="hljs-string">'''
+  . = parse_json!(.message)
+  .hostname = get_hostname!()
+  .environment = get_env_var!("ENVIRONMENT")
+'''</span>
+
+<span class="hljs-section">[sinks.azure_event_hub]</span>
+<span class="hljs-attr">type</span> = <span class="hljs-string">"azure_event_hubs"</span>
+<span class="hljs-attr">inputs</span> = [<span class="hljs-string">"parse_json"</span>]
+<span class="hljs-attr">connection_string</span> = <span class="hljs-string">"${EVENT_HUB_CONNECTION_STRING}"</span>
+<span class="hljs-attr">hub_name</span> = <span class="hljs-string">"application-logs"</span>
+<span class="hljs-attr">encoding.codec</span> = <span class="hljs-string">"json"</span>
+
+<span class="hljs-comment"># Batching</span>
+<span class="hljs-attr">batch.max_bytes</span> = <span class="hljs-number">5242880</span>  <span class="hljs-comment"># 5MB</span>
+<span class="hljs-attr">batch.timeout_secs</span> = <span class="hljs-number">10</span>
+
+<span class="hljs-comment"># Compression</span>
+<span class="hljs-attr">compression</span> = <span class="hljs-string">"gzip"</span>
+</div></code></pre>
+<h4 id="monitoring-event-hub">Monitoring Event Hub</h4>
+<pre class="hljs"><code><div>// Métriques Event Hub dans ADX
+.show commands
+| where CommandType == &quot;DataIngestPull&quot;
+| where OriginalClientRequestId contains &quot;eventhub&quot;
+| summarize 
+    EventCount = sum(RowCount),
+    TotalSizeGB = sum(ResourceUtilization.MemoryPeak) / 1024 / 1024 / 1024,
+    AvgLatencySeconds = avg(Duration) / 1000.0
+  by bin(StartedOn, 5m)
+| render timechart
+</div></code></pre>
+<hr>
+<h3 id="option-2-azure-blob-storage-batch---pour-historique">Option 2: Azure Blob Storage (Batch) - Pour Historique</h3>
+<h4 id="architecture">Architecture</h4>
+<pre class="hljs"><code><div>Applications/Services
+    ↓
+Agents de collecte
+    ↓
+Azure Blob Storage (hourly batches)
+    ↓
+Event Grid Notification
+    ↓
+ADX Data Connection
+    ↓
+Azure Data Explorer Tables
+</div></code></pre>
+<h4 id="avantages">Avantages</h4>
+<ul>
+<li>✅ <strong>Coût réduit</strong>: Pas de Event Hub</li>
+<li>✅ <strong>Simplicité</strong>: Drop de fichiers</li>
+<li>✅ <strong>Réingestion</strong>: Facile à rejouer</li>
+<li>✅ <strong>Formats variés</strong>: JSON, Parquet, CSV, Avro</li>
+</ul>
+<h4 id="inconv%C3%A9nients">Inconvénients</h4>
+<ul>
+<li>⚠️ <strong>Latence plus élevée</strong>: 5-15 minutes</li>
+<li>⚠️ <strong>Moins de résilience</strong>: Pas de buffer</li>
+</ul>
+<h4 id="configuration-storage-account">Configuration Storage Account</h4>
+<pre class="hljs"><code><div>az storage account create \
+  --name <span class="hljs-string">"loganalyticsprodsa"</span> \
+  --resource-group <span class="hljs-string">"rg-loganalysis-prod"</span> \
+  --location <span class="hljs-string">"westeurope"</span> \
+  --sku <span class="hljs-string">"Standard_LRS"</span> \
+  --kind <span class="hljs-string">"StorageV2"</span> \
+  --access-tier <span class="hljs-string">"Hot"</span> \
+  --<span class="hljs-built_in">enable</span>-hierarchical-namespace <span class="hljs-literal">true</span>  <span class="hljs-comment"># Data Lake Gen2</span>
+
+az storage container create \
+  --account-name <span class="hljs-string">"loganalyticsprodsa"</span> \
+  --name <span class="hljs-string">"application-logs"</span> \
+  --public-access off
+</div></code></pre>
+<h4 id="event-grid-configuration">Event Grid Configuration</h4>
+<pre class="hljs"><code><div><span class="hljs-comment"># Event Grid Topic</span>
+az eventgrid topic create \
+  --name <span class="hljs-string">"storage-events-topic"</span> \
+  --resource-group <span class="hljs-string">"rg-loganalysis-prod"</span> \
+  --location <span class="hljs-string">"westeurope"</span>
+
+<span class="hljs-comment"># Event Grid Subscription</span>
+az eventgrid event-subscription create \
+  --name <span class="hljs-string">"blob-created-subscription"</span> \
+  --<span class="hljs-built_in">source</span>-resource-id <span class="hljs-string">"/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.Storage/storageAccounts/loganalyticsprodsa"</span> \
+  --endpoint-type <span class="hljs-string">"azurefunction"</span> \
+  --endpoint <span class="hljs-string">"/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.Web/sites/adx-ingestion-func/functions/BlobCreatedHandler"</span> \
+  --included-event-types <span class="hljs-string">"Microsoft.Storage.BlobCreated"</span>
+</div></code></pre>
+<h4 id="data-connection-adx">Data Connection ADX</h4>
+<pre class="hljs"><code><div>.create-or-alter table ApplicationLogs ingestion blob data connection 'StorageConnection'
+```json
+{
+  &quot;properties&quot;: {
+    &quot;storageAccountResourceId&quot;: &quot;/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.Storage/storageAccounts/loganalyticsprodsa&quot;,
+    &quot;containerName&quot;: &quot;application-logs&quot;,
+    &quot;eventGridResourceId&quot;: &quot;/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.EventGrid/topics/storage-events-topic&quot;,
+    &quot;tableName&quot;: &quot;ApplicationLogs&quot;,
+    &quot;mappingRuleName&quot;: &quot;ApplicationLogsMapping&quot;,
+    &quot;dataFormat&quot;: &quot;Parquet&quot;,
+    &quot;ignoreFirstRecord&quot;: false,
+    &quot;managedIdentityResourceId&quot;: &quot;/subscriptions/{sub-id}/resourceGroups/rg-loganalysis-prod/providers/Microsoft.ManagedIdentity/userAssignedIdentities/adx-identity&quot;
+  }
+}
+</div></code></pre>
+<pre class="hljs"><code><div>
+#### Pattern de Naming des Fichiers
+
+</div></code></pre>
+<p>application-logs/
+└── year=2024/
+└── month=06/
+└── day=15/
+└── hour=14/
+├── app-logs-20240615-140000-001.parquet.gz
+├── app-logs-20240615-140000-002.parquet.gz
+└── app-logs-20240615-140000-003.parquet.gz</p>
+<pre class="hljs"><code><div>
+**Best practices**:
+- **Taille**: 100-500 MB par fichier (après compression)
+- **Format**: Parquet (meilleure compression et performance)
+- **Compression**: GZip ou Snappy
+- **Fréquence**: Toutes les 5-10 minutes
+
+#### Script de Upload
+
+```python
+from azure.storage.blob import BlobServiceClient
+import gzip
+import json
+from datetime import datetime
+import pyarrow as pa
+import pyarrow.parquet as pq
+
+class LogUploader:
+    def __init__(self, connection_string, container_name):
+        self.blob_service = BlobServiceClient.from_connection_string(connection_string)
+        self.container_client = self.blob_service.get_container_client(container_name)
+    
+    def upload_logs_parquet(self, logs, partition_date):
+        # Conversion en Parquet
+        table = pa.Table.from_pylist(logs)
+        
+        # Path avec partitioning
+        year = partition_date.strftime(&quot;%Y&quot;)
+        month = partition_date.strftime(&quot;%m&quot;)
+        day = partition_date.strftime(&quot;%d&quot;)
+        hour = partition_date.strftime(&quot;%H&quot;)
+        timestamp = partition_date.strftime(&quot;%Y%m%d-%H%M%S&quot;)
+        
+        blob_path = f&quot;year={year}/month={month}/day={day}/hour={hour}/logs-{timestamp}.parquet.gz&quot;
+        
+        # Write to buffer
+        import io
+        buffer = io.BytesIO()
+        pq.write_table(table, buffer, compression='gzip')
+        buffer.seek(0)
+        
+        # Upload
+        blob_client = self.container_client.get_blob_client(blob_path)
+        blob_client.upload_blob(buffer, overwrite=False)
+        
+        print(f&quot;Uploaded {len(logs)} logs to {blob_path}&quot;)
+
+# Usage
+uploader = LogUploader(connection_string, &quot;application-logs&quot;)
+uploader.upload_logs_parquet(log_batch, datetime.now())
+</div></code></pre>
+<hr>
+<h3 id="option-3-hybrid-event-hub--storage">Option 3: Hybrid (Event Hub + Storage)</h3>
+<h4 id="use-cases">Use Cases</h4>
+<ul>
+<li><strong>Event Hub</strong>: Logs critiques temps réel (erreurs, sécurité)</li>
+<li><strong>Storage</strong>: Logs bulk non-critiques (debug, trace)</li>
+</ul>
+<h4 id="routage-par-niveau-de-s%C3%A9v%C3%A9rit%C3%A9">Routage par niveau de sévérité</h4>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">route_log</span><span class="hljs-params">(log_entry)</span>:</span>
+    level = log_entry.get(<span class="hljs-string">'level'</span>, <span class="hljs-string">'info'</span>).lower()
+    
+    <span class="hljs-keyword">if</span> level <span class="hljs-keyword">in</span> [<span class="hljs-string">'error'</span>, <span class="hljs-string">'critical'</span>, <span class="hljs-string">'warning'</span>]:
+        <span class="hljs-comment"># Route vers Event Hub pour traitement immédiat</span>
+        send_to_event_hub(log_entry)
+    <span class="hljs-keyword">else</span>:
+        <span class="hljs-comment"># Route vers Storage pour batch processing</span>
+        send_to_storage(log_entry)
+</div></code></pre>
+<h4 id="configuration-fluentd-avec-routing">Configuration Fluentd avec Routing</h4>
+<pre class="hljs"><code><div><span class="hljs-string">&lt;match</span> <span class="hljs-string">application.logs&gt;</span>
+  <span class="hljs-string">@type</span> <span class="hljs-string">copy</span>
+  
+  <span class="hljs-comment"># Logs critiques vers Event Hub</span>
+  <span class="hljs-string">&lt;store&gt;</span>
+    <span class="hljs-string">@type</span> <span class="hljs-string">azure_event_hubs</span>
+    <span class="hljs-string">connection_string</span> <span class="hljs-string">"#{ENV['EVENT_HUB_CONNECTION_STRING']}"</span>
+    <span class="hljs-string">hub_name</span> <span class="hljs-string">"critical-logs"</span>
+    <span class="hljs-string">&lt;filter&gt;</span>
+      <span class="hljs-string">@type</span> <span class="hljs-string">grep</span>
+      <span class="hljs-string">&lt;regexp&gt;</span>
+        <span class="hljs-string">key</span> <span class="hljs-string">level</span>
+        <span class="hljs-string">pattern</span> <span class="hljs-string">/(error|critical|warning)/i</span>
+      <span class="hljs-string">&lt;/regexp&gt;</span>
+    <span class="hljs-string">&lt;/filter&gt;</span>
+  <span class="hljs-string">&lt;/store&gt;</span>
+  
+  <span class="hljs-comment"># Tous les logs vers Storage (batch)</span>
+  <span class="hljs-string">&lt;store&gt;</span>
+    <span class="hljs-string">@type</span> <span class="hljs-string">azure_storage_append_blob</span>
+    <span class="hljs-string">azure_storage_account</span> <span class="hljs-string">"#{ENV['STORAGE_ACCOUNT']}"</span>
+    <span class="hljs-string">azure_storage_access_key</span> <span class="hljs-string">"#{ENV['STORAGE_KEY']}"</span>
+    <span class="hljs-string">azure_container</span> <span class="hljs-string">"application-logs"</span>
+    <span class="hljs-string">path</span> <span class="hljs-string">"logs/%Y/%m/%d/%H/logs-#{Socket.gethostname}-%M.json"</span>
+    
+    <span class="hljs-string">&lt;buffer</span> <span class="hljs-string">time&gt;</span>
+      <span class="hljs-string">@type</span> <span class="hljs-string">file</span>
+      <span class="hljs-string">path</span> <span class="hljs-string">/var/log/td-agent/buffer/storage</span>
+      <span class="hljs-string">timekey</span> <span class="hljs-number">600</span>  <span class="hljs-comment"># 10 minutes</span>
+      <span class="hljs-string">timekey_wait</span> <span class="hljs-number">60</span>
+      <span class="hljs-string">chunk_limit_size</span> <span class="hljs-string">256MB</span>
+    <span class="hljs-string">&lt;/buffer&gt;</span>
+  <span class="hljs-string">&lt;/store&gt;</span>
+<span class="hljs-string">&lt;/match&gt;</span>
+</div></code></pre>
+<hr>
+<h2 id="formats-de-donn%C3%A9es">Formats de Données</h2>
+<h3 id="json-recommand%C3%A9-pour-d%C3%A9marrage">JSON (Recommandé pour démarrage)</h3>
+<p><strong>Avantages</strong>:</p>
+<ul>
+<li>Flexible et facile à débugger</li>
+<li>Support natif de dynamic types dans ADX</li>
+<li>Lisible par humains</li>
+</ul>
+<p><strong>Inconvénients</strong>:</p>
+<ul>
+<li>Taille plus grande (~30-40% vs Parquet)</li>
+<li>Parsing moins performant</li>
+</ul>
+<p><strong>Exemple</strong>:</p>
+<pre class="hljs"><code><div>{
+  <span class="hljs-attr">"timestamp"</span>: <span class="hljs-string">"2024-06-15T14:35:42.123Z"</span>,
+  <span class="hljs-attr">"level"</span>: <span class="hljs-string">"error"</span>,
+  <span class="hljs-attr">"logger"</span>: <span class="hljs-string">"com.company.OrderService"</span>,
+  <span class="hljs-attr">"message"</span>: <span class="hljs-string">"Failed to process order"</span>,
+  <span class="hljs-attr">"exception"</span>: <span class="hljs-string">"OrderProcessingException: Timeout while contacting payment service"</span>,
+  <span class="hljs-attr">"traceId"</span>: <span class="hljs-string">"abc123-def456-ghi789"</span>,
+  <span class="hljs-attr">"spanId"</span>: <span class="hljs-string">"span-001"</span>,
+  <span class="hljs-attr">"serviceName"</span>: <span class="hljs-string">"OrderService"</span>,
+  <span class="hljs-attr">"environment"</span>: <span class="hljs-string">"production"</span>,
+  <span class="hljs-attr">"properties"</span>: {
+    <span class="hljs-attr">"orderId"</span>: <span class="hljs-string">"ORD-123456"</span>,
+    <span class="hljs-attr">"userId"</span>: <span class="hljs-string">"user-789"</span>,
+    <span class="hljs-attr">"amount"</span>: <span class="hljs-number">99.99</span>,
+    <span class="hljs-attr">"retryCount"</span>: <span class="hljs-number">3</span>
+  }
+}
+</div></code></pre>
+<h3 id="parquet-recommand%C3%A9-pour-production">Parquet (Recommandé pour production)</h3>
+<p><strong>Avantages</strong>:</p>
+<ul>
+<li>Compression excellente (50-70% vs JSON)</li>
+<li>Lecture columnaire très rapide</li>
+<li>Schéma fort et typé</li>
+</ul>
+<p><strong>Inconvénients</strong>:</p>
+<ul>
+<li>Nécessite conversion côté agent</li>
+<li>Moins flexible pour schémas changeants</li>
+</ul>
+<p><strong>Configuration</strong>:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">import</span> pyarrow <span class="hljs-keyword">as</span> pa
+<span class="hljs-keyword">import</span> pyarrow.parquet <span class="hljs-keyword">as</span> pq
+
+<span class="hljs-comment"># Définition du schéma</span>
+schema = pa.schema([
+    (<span class="hljs-string">'timestamp'</span>, pa.timestamp(<span class="hljs-string">'ms'</span>)),
+    (<span class="hljs-string">'level'</span>, pa.string()),
+    (<span class="hljs-string">'logger'</span>, pa.string()),
+    (<span class="hljs-string">'message'</span>, pa.string()),
+    (<span class="hljs-string">'exception'</span>, pa.string()),
+    (<span class="hljs-string">'traceId'</span>, pa.string()),
+    (<span class="hljs-string">'serviceName'</span>, pa.string()),
+    (<span class="hljs-string">'properties'</span>, pa.string())  <span class="hljs-comment"># JSON stringifié</span>
+])
+
+<span class="hljs-comment"># Écriture</span>
+pq.write_table(
+    table,
+    <span class="hljs-string">'logs.parquet'</span>,
+    compression=<span class="hljs-string">'snappy'</span>,
+    use_dictionary=<span class="hljs-literal">True</span>
+)
+</div></code></pre>
+<h3 id="csv-pour-simplicit%C3%A9">CSV (Pour simplicité)</h3>
+<p><strong>Use case</strong>: Logs simples, outils legacy</p>
+<p><strong>Format</strong>:</p>
+<pre class="hljs"><code><div>timestamp,level,serviceName,message
+2024-06-15T14:35:42Z,error,OrderService,&quot;Failed to process order&quot;
+</div></code></pre>
+<hr>
+<h2 id="transformation-et-enrichissement">Transformation et Enrichissement</h2>
+<h3 id="update-policy-pour-enrichissement">Update Policy pour Enrichissement</h3>
+<pre class="hljs"><code><div>// Fonction d'enrichissement
+.create-or-alter function EnrichLogs() {
+    ApplicationLogs
+    | extend 
+        // Parsing enrichi
+        Severity = case(
+            Level == &quot;critical&quot;, 5,
+            Level == &quot;error&quot;, 4,
+            Level == &quot;warning&quot;, 3,
+            Level == &quot;info&quot;, 2,
+            1
+        ),
+        // Extraction de métadonnées
+        ErrorCode = extract(@&quot;errorCode=(\d+)&quot;, 1, Message),
+        IPAddress = extract(@&quot;ip=([0-9.]+)&quot;, 1, Message),
+        // Géolocalisation
+        GeoInfo = geo_info_from_ip_address(extract(@&quot;ip=([0-9.]+)&quot;, 1, Message)),
+        // Catégorisation
+        ServiceCategory = extract(@&quot;^([^-]+)&quot;, 1, ServiceName),
+        // Date parts pour partitioning
+        Year = getyear(Timestamp),
+        Month = getmonth(Timestamp),
+        Day = dayofmonth(Timestamp),
+        Hour = hourofday(Timestamp)
+    | extend
+        Country = tostring(GeoInfo.country),
+        City = tostring(GeoInfo.city)
+    | project-away GeoInfo
+}
+
+// Table enrichie
+.create table EnrichedApplicationLogs (
+    Timestamp: datetime,
+    Level: string,
+    Severity: int,
+    ServiceName: string,
+    ServiceCategory: string,
+    Message: string,
+    ErrorCode: string,
+    IPAddress: string,
+    Country: string,
+    City: string,
+    TraceId: string,
+    Year: int,
+    Month: int,
+    Day: int,
+    Hour: int
+)
+
+// Update policy
+.alter table EnrichedApplicationLogs policy update 
+@'[{
+    &quot;Source&quot;: &quot;ApplicationLogs&quot;,
+    &quot;Query&quot;: &quot;EnrichLogs()&quot;,
+    &quot;IsEnabled&quot;: true,
+    &quot;IsTransactional&quot;: true
+}]'
+</div></code></pre>
+<hr>
+<h2 id="monitoring-et-troubleshooting">Monitoring et Troubleshooting</h2>
+<h3 id="dashboard-dingestion">Dashboard d'Ingestion</h3>
+<pre class="hljs"><code><div>// Vue d'ensemble de l'ingestion
+.show commands
+| where CommandType in (&quot;DataIngestPull&quot;, &quot;DataIngestPush&quot;)
+| where StartedOn &gt; ago(1h)
+| summarize 
+    IngestedRows = sum(RowCount),
+    IngestedGB = sum(ResourceUtilization.MemoryPeak) / 1024 / 1024 / 1024,
+    AvgLatencySeconds = avg(Duration) / 1000.0,
+    P95LatencySeconds = percentile(Duration, 95) / 1000.0,
+    FailedCount = countif(State == &quot;Failed&quot;)
+  by bin(StartedOn, 5m)
+| render timechart
+</div></code></pre>
+<h3 id="d%C3%A9tection-d%C3%A9checs">Détection d'Échecs</h3>
+<pre class="hljs"><code><div>// Échecs d'ingestion récents
+.show ingestion failures
+| where FailedOn &gt; ago(1h)
+| project 
+    FailedOn,
+    Database,
+    Table,
+    OperationId,
+    ErrorCode,
+    FailureStatus,
+    Details
+| order by FailedOn desc
+</div></code></pre>
+<h3 id="alertes-recommand%C3%A9es">Alertes Recommandées</h3>
+<p><strong>Azure Monitor Alerts</strong>:</p>
+<ol>
+<li><strong>Ingestion Rate Drop</strong></li>
+</ol>
+<pre class="hljs"><code><div>// Alert si ingestion &lt; 50% de la moyenne
+let baseline = ApplicationLogs
+    | where ingestion_time() &gt; ago(7d)
+    | summarize AvgRowsPerMinute = count() / (7 * 24 * 60);
+ApplicationLogs
+| where ingestion_time() &gt; ago(5m)
+| summarize CurrentRowsPerMinute = count() / 5
+| extend Baseline = toscalar(baseline)
+| where CurrentRowsPerMinute &lt; (Baseline * 0.5)
+</div></code></pre>
+<ol start="2">
+<li><strong>Ingestion Latency High</strong></li>
+</ol>
+<pre class="hljs"><code><div>// Alert si latence &gt; 5 minutes
+ApplicationLogs
+| where ingestion_time() &gt; ago(10m)
+| extend IngestionLatency = ingestion_time() - Timestamp
+| summarize P95Latency = percentile(IngestionLatency, 95)
+| where P95Latency &gt; 5m
+</div></code></pre>
+<ol start="3">
+<li><strong>Failed Ingestions</strong></li>
+</ol>
+<pre class="hljs"><code><div>// Alert si échecs &gt; 1% du volume
+.show ingestion failures
+| where FailedOn &gt; ago(5m)
+| summarize FailureCount = count()
+| extend Threshold = 100  // Ajuster selon volume
+| where FailureCount &gt; Threshold
+</div></code></pre>
+<hr>
+<h2 id="best-practices">Best Practices</h2>
+<h3 id="sizing-et-performance">Sizing et Performance</h3>
+<ol>
+<li><strong>Taille des fichiers</strong>: 100MB - 1GB (optimal)</li>
+<li><strong>Batch frequency</strong>: 5-10 minutes</li>
+<li><strong>Compression</strong>: Toujours activer (GZip ou Snappy)</li>
+<li><strong>Partitions Event Hub</strong>: Au moins 1 partition par 1 MB/s</li>
+</ol>
+<h3 id="r%C3%A9silience">Résilience</h3>
+<ol>
+<li><strong>Retry Logic</strong>: Exponentiel backoff</li>
+<li><strong>Dead Letter Queue</strong>: Pour messages non ingérables</li>
+<li><strong>Monitoring continu</strong>: Alertes sur échecs/latence</li>
+<li><strong>Backfill capability</strong>: Capacité de réingérer depuis Storage</li>
+</ol>
+<h3 id="s%C3%A9curit%C3%A9">Sécurité</h3>
+<ol>
+<li><strong>Managed Identities</strong>: Pas de secrets dans config</li>
+<li><strong>Private Endpoints</strong>: Connexions privées</li>
+<li><strong>Encryption</strong>: At rest et in transit</li>
+<li><strong>Audit Logging</strong>: Tracer toutes opérations d'ingestion</li>
+</ol>
+<h3 id="co%C3%BBts">Coûts</h3>
+<ol>
+<li><strong>Compression</strong>: Réduire network et storage costs</li>
+<li><strong>Batch vs Streaming</strong>: Storage moins cher que Event Hub</li>
+<li><strong>Reserved Capacity</strong>: Pour Event Hub et ADX</li>
+<li><strong>Lifecycle policies</strong>: Archiver logs anciens</li>
+</ol>
+<hr>
+<h2 id="checklist-de-d%C3%A9ploiement">Checklist de Déploiement</h2>
+<h3 id="phase-1-setup-infrastructure">Phase 1: Setup Infrastructure</h3>
+<ul>
+<li><input type="checkbox" id="checkbox38"><label for="checkbox38">Créer cluster ADX</label></li>
+<li><input type="checkbox" id="checkbox39"><label for="checkbox39">Créer Event Hub / Storage Account</label></li>
+<li><input type="checkbox" id="checkbox40"><label for="checkbox40">Configurer Event Grid (si Storage)</label></li>
+<li><input type="checkbox" id="checkbox41"><label for="checkbox41">Setup Managed Identities</label></li>
+<li><input type="checkbox" id="checkbox42"><label for="checkbox42">Configurer Private Endpoints</label></li>
+</ul>
+<h3 id="phase-2-configuration-adx">Phase 2: Configuration ADX</h3>
+<ul>
+<li><input type="checkbox" id="checkbox43"><label for="checkbox43">Créer Database et Tables</label></li>
+<li><input type="checkbox" id="checkbox44"><label for="checkbox44">Définir Ingestion Mappings</label></li>
+<li><input type="checkbox" id="checkbox45"><label for="checkbox45">Configurer Data Connections</label></li>
+<li><input type="checkbox" id="checkbox46"><label for="checkbox46">Setup Update Policies</label></li>
+<li><input type="checkbox" id="checkbox47"><label for="checkbox47">Configurer Retention Policies</label></li>
+</ul>
+<h3 id="phase-3-agents-et-collection">Phase 3: Agents et Collection</h3>
+<ul>
+<li><input type="checkbox" id="checkbox48"><label for="checkbox48">Déployer agents de collecte</label></li>
+<li><input type="checkbox" id="checkbox49"><label for="checkbox49">Configurer routing et buffering</label></li>
+<li><input type="checkbox" id="checkbox50"><label for="checkbox50">Tester ingestion end-to-end</label></li>
+<li><input type="checkbox" id="checkbox51"><label for="checkbox51">Valider formats et mappings</label></li>
+</ul>
+<h3 id="phase-4-monitoring">Phase 4: Monitoring</h3>
+<ul>
+<li><input type="checkbox" id="checkbox52"><label for="checkbox52">Configurer dashboards d'ingestion</label></li>
+<li><input type="checkbox" id="checkbox53"><label for="checkbox53">Setup alertes critiques</label></li>
+<li><input type="checkbox" id="checkbox54"><label for="checkbox54">Documenter runbooks</label></li>
+<li><input type="checkbox" id="checkbox55"><label for="checkbox55">Tester procédures d'incident</label></li>
+</ul>
+<h3 id="phase-5-optimization">Phase 5: Optimization</h3>
+<ul>
+<li><input type="checkbox" id="checkbox56"><label for="checkbox56">Tuner batch sizes</label></li>
+<li><input type="checkbox" id="checkbox57"><label for="checkbox57">Optimiser compression</label></li>
+<li><input type="checkbox" id="checkbox58"><label for="checkbox58">Ajuster capacités</label></li>
+<li><input type="checkbox" id="checkbox59"><label for="checkbox59">Réviser coûts</label></li>
+</ul>
+<hr>
+<h2 id="ressources">Ressources</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/ingest-data-overview">ADX Data Ingestion Overview</a></li>
+<li><a href="https://docs.microsoft.com/azure/event-hubs/event-hubs-messaging-exceptions">Event Hub Best Practices</a></li>
+<li><a href="https://docs.fluentd.org/">Fluentd Documentation</a></li>
+<li><a href="https://vector.dev/docs/">Vector Documentation</a></li>
+</ul>
+<h1 id="exemples-kql-pour-analyse-de-logs">Exemples KQL pour Analyse de Logs</h1>
+<h2 id="introduction-%C3%A0-kql-kusto-query-language">Introduction à KQL (Kusto Query Language)</h2>
+<p>KQL est un langage de requête optimisé pour l'analyse de grands volumes de données, particulièrement efficace pour les logs et télémétries. Ce document présente des exemples pratiques pour l'analyse quotidienne de logs.</p>
+<h2 id="structure-de-base-dune-requ%C3%AAte-kql">Structure de Base d'une Requête KQL</h2>
+<pre class="hljs"><code><div>TableName
+| where Condition
+| extend NewColumn = Expression
+| summarize Aggregation by GroupBy
+| order by Column
+| take N
+</div></code></pre>
+<h2 id="exemples-par-cas-dusage">Exemples par Cas d'Usage</h2>
+<h3 id="1-analyses-de-base">1. Analyses de Base</h3>
+<h4 id="compter-les-logs-par-niveau-de-s%C3%A9v%C3%A9rit%C3%A9">Compter les logs par niveau de sévérité</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(24h)
+| summarize Count = count() by Level
+| order by Count desc
+| render piechart
+</div></code></pre>
+<h4 id="top-10-services-les-plus-verbeux">Top 10 services les plus verbeux</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(1h)
+| summarize LogCount = count() by ServiceName
+| top 10 by LogCount desc
+</div></code></pre>
+<h4 id="logs-derreur-avec-contexte">Logs d'erreur avec contexte</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Level in (&quot;Error&quot;, &quot;Critical&quot;)
+| where Timestamp &gt; ago(1h)
+| project Timestamp, ServiceName, Message, Exception, TraceId
+| order by Timestamp desc
+| take 100
+</div></code></pre>
+<h3 id="2-analyse-temporelle">2. Analyse Temporelle</h3>
+<h4 id="distribution-horaire-des-logs">Distribution horaire des logs</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(7d)
+| summarize Count = count() by bin(Timestamp, 1h), Level
+| render timechart
+</div></code></pre>
+<h4 id="comparaison-jour-vs-jour">Comparaison jour vs jour</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(48h)
+| extend DayCategory = iff(Timestamp &gt; ago(24h), &quot;Today&quot;, &quot;Yesterday&quot;)
+| summarize Count = count() by bin(Timestamp, 1h), DayCategory
+| render timechart
+</div></code></pre>
+<h4 id="pattern-hebdomadaire">Pattern hebdomadaire</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(30d)
+| extend DayOfWeek = dayofweek(Timestamp)
+| extend Hour = hourofday(Timestamp)
+| summarize AvgLogs = avg(todouble(1)) by DayOfWeek, Hour
+| render heatmap
+</div></code></pre>
+<h3 id="3-performance-et-latence">3. Performance et Latence</h3>
+<h4 id="analyse-de-latence-par-endpoint">Analyse de latence par endpoint</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where ServiceName == &quot;ApiGateway&quot;
+| where Timestamp &gt; ago(1h)
+| extend Endpoint = extract(@&quot;endpoint=([^ ]+)&quot;, 1, Message)
+| summarize 
+    RequestCount = count(),
+    P50 = percentile(DurationMs, 50),
+    P95 = percentile(DurationMs, 95),
+    P99 = percentile(DurationMs, 99),
+    Max = max(DurationMs)
+  by Endpoint
+| where RequestCount &gt; 100
+| order by P95 desc
+</div></code></pre>
+<h4 id="requ%C3%AAtes-lentes-slo--3-secondes">Requêtes lentes (SLO &gt; 3 secondes)</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where DurationMs &gt; 3000
+| where Timestamp &gt; ago(24h)
+| extend Endpoint = extract(@&quot;path=([^ ]+)&quot;, 1, RequestPath)
+| summarize 
+    SlowRequests = count(),
+    AvgDuration = avg(DurationMs),
+    MaxDuration = max(DurationMs)
+  by Endpoint, ServiceName
+| order by SlowRequests desc
+</div></code></pre>
+<h4 id="time-series-de-latence-avec-d%C3%A9tection-danomalies">Time series de latence avec détection d'anomalies</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where ServiceName == &quot;PaymentService&quot;
+| where Timestamp &gt; ago(7d)
+| summarize AvgDuration = avg(DurationMs) by bin(Timestamp, 5m)
+| extend (anomalies, score, baseline) = series_decompose_anomalies(AvgDuration, 1.5)
+| render anomalychart with (anomalycolumns=anomalies)
+</div></code></pre>
+<h3 id="4-analyse-derreurs">4. Analyse d'Erreurs</h3>
+<h4 id="top-erreurs-par-fr%C3%A9quence">Top erreurs par fréquence</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Level == &quot;Error&quot;
+| where Timestamp &gt; ago(24h)
+| extend ErrorType = extract(@&quot;Exception: ([^:]+)&quot;, 1, Exception)
+| summarize 
+    ErrorCount = count(),
+    AffectedUsers = dcount(UserId),
+    AffectedServices = dcount(ServiceName),
+    FirstOccurrence = min(Timestamp),
+    LastOccurrence = max(Timestamp),
+    SampleMessage = any(Message)
+  by ErrorType
+| order by ErrorCount desc
+| take 20
+</div></code></pre>
+<h4 id="cascade-derreurs-erreurs-li%C3%A9es-par-traceid">Cascade d'erreurs (erreurs liées par TraceId)</h4>
+<pre class="hljs"><code><div>let ErrorTraces = ApplicationLogs
+    | where Level == &quot;Error&quot; and Timestamp &gt; ago(1h)
+    | where ServiceName == &quot;OrderService&quot;
+    | distinct TraceId;
+ApplicationLogs
+| where TraceId in (ErrorTraces)
+| order by TraceId, Timestamp asc
+| project Timestamp, TraceId, ServiceName, Level, Message, DurationMs
+</div></code></pre>
+<h4 id="taux-derreur-par-service">Taux d'erreur par service</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(24h)
+| summarize 
+    TotalRequests = count(),
+    ErrorCount = countif(Level in (&quot;Error&quot;, &quot;Critical&quot;)),
+    ErrorRate = round(countif(Level in (&quot;Error&quot;, &quot;Critical&quot;)) * 100.0 / count(), 2)
+  by ServiceName, bin(Timestamp, 1h)
+| where TotalRequests &gt; 100
+| order by ErrorRate desc
+| render timechart
+</div></code></pre>
+<h3 id="5-s%C3%A9curit%C3%A9-et-audit">5. Sécurité et Audit</h3>
+<h4 id="tentatives-de-connexion-%C3%A9chou%C3%A9es">Tentatives de connexion échouées</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Logger contains &quot;Auth&quot;
+| where Message has_any (&quot;login failed&quot;, &quot;authentication failed&quot;)
+| where Timestamp &gt; ago(1h)
+| extend IPAddress = extract(@&quot;ip=([0-9.]+)&quot;, 1, Message)
+| summarize 
+    FailedAttempts = count(),
+    UniqueUsers = dcount(UserId),
+    FirstAttempt = min(Timestamp),
+    LastAttempt = max(Timestamp)
+  by IPAddress
+| where FailedAttempts &gt; 5
+| order by FailedAttempts desc
+</div></code></pre>
+<h4 id="d%C3%A9tection-dattaques-par-force-brute">Détection d'attaques par force brute</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(5m)
+| where ResponseCode in (401, 403)
+| extend IPAddress = extract(@&quot;ip=([0-9.]+)&quot;, 1, Message)
+| summarize 
+    Attempts = count(),
+    TargetedAccounts = make_set(UserId, 10)
+  by IPAddress, bin(Timestamp, 1m)
+| where Attempts &gt; 10
+| project Timestamp, IPAddress, Attempts, TargetedAccounts
+</div></code></pre>
+<h4 id="acc%C3%A8s-%C3%A0-ressources-sensibles">Accès à ressources sensibles</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(7d)
+| where RequestPath has_any (&quot;/admin&quot;, &quot;/api/sensitive&quot;, &quot;/internal&quot;)
+| summarize 
+    AccessCount = count(),
+    UniqueUsers = dcount(UserId),
+    SuccessfulAccess = countif(ResponseCode &lt; 400),
+    BlockedAccess = countif(ResponseCode &gt;= 400)
+  by UserId, RequestPath
+| where AccessCount &gt; 0
+| order by AccessCount desc
+</div></code></pre>
+<h3 id="6-analyse-multi-service-distributed-tracing">6. Analyse Multi-Service (Distributed Tracing)</h3>
+<h4 id="vue-compl%C3%A8te-dune-transaction">Vue complète d'une transaction</h4>
+<pre class="hljs"><code><div>let traceId = &quot;abc123-def456-ghi789&quot;;
+ApplicationLogs
+| where TraceId == traceId
+| order by Timestamp asc
+| project 
+    Timestamp,
+    ServiceName,
+    Level,
+    Message,
+    DurationMs,
+    ResponseCode,
+    Step = row_number()
+| extend TotalDuration = toscalar(
+    ApplicationLogs 
+    | where TraceId == traceId 
+    | summarize max(Timestamp) - min(Timestamp)
+  ) / 1ms
+</div></code></pre>
+<h4 id="services-les-plus-lents-dans-la-cha%C3%AEne">Services les plus lents dans la chaîne</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(1h)
+| where isnotempty(TraceId)
+| summarize ServiceDuration = sum(DurationMs) by TraceId, ServiceName
+| summarize 
+    AvgDuration = avg(ServiceDuration),
+    P95Duration = percentile(ServiceDuration, 95),
+    CallCount = count()
+  by ServiceName
+| order by P95Duration desc
+</div></code></pre>
+<h4 id="tra%C3%A7age-des-d%C3%A9pendances-entre-services">Traçage des dépendances entre services</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(1h)
+| where isnotempty(TraceId)
+| summarize by TraceId, ServiceName
+| join kind=inner (
+    ApplicationLogs
+    | where Timestamp &gt; ago(1h)
+    | where isnotempty(TraceId)
+    | summarize by TraceId, ServiceName
+  ) on TraceId
+| where ServiceName != ServiceName1
+| summarize Count = count() by Caller = ServiceName, Callee = ServiceName1
+| where Count &gt; 10
+| render force_directed_graph 
+</div></code></pre>
+<h3 id="7-analyse-business">7. Analyse Business</h3>
+<h4 id="utilisateurs-les-plus-actifs">Utilisateurs les plus actifs</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(24h)
+| where isnotempty(UserId)
+| summarize 
+    Actions = count(),
+    UniqueEndpoints = dcount(RequestPath),
+    TotalDataTransferred = sum(BytesSent + BytesReceived),
+    AvgResponseTime = avg(DurationMs),
+    ErrorCount = countif(ResponseCode &gt;= 400)
+  by UserId
+| order by Actions desc
+| take 50
+</div></code></pre>
+<h4 id="analyse-g%C3%A9ographique-du-trafic">Analyse géographique du trafic</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(7d)
+| extend IPAddress = extract(@&quot;ip=([0-9.]+)&quot;, 1, Message)
+| extend GeoInfo = geo_info_from_ip_address(IPAddress)
+| extend Country = tostring(GeoInfo.country), City = tostring(GeoInfo.city)
+| where isnotempty(Country)
+| summarize 
+    Requests = count(),
+    UniqueUsers = dcount(UserId),
+    AvgLatency = avg(DurationMs)
+  by Country, City
+| order by Requests desc
+| take 20
+</div></code></pre>
+<h4 id="funnel-dutilisation">Funnel d'utilisation</h4>
+<pre class="hljs"><code><div>let StartEvent = &quot;page_view:home&quot;;
+let Step1 = &quot;page_view:product&quot;;
+let Step2 = &quot;action:add_to_cart&quot;;
+let Step3 = &quot;action:checkout&quot;;
+let users_started = ApplicationLogs
+    | where Timestamp &gt; ago(7d)
+    | where Message has StartEvent
+    | distinct UserId;
+let users_step1 = ApplicationLogs
+    | where Timestamp &gt; ago(7d)
+    | where Message has Step1
+    | distinct UserId;
+let users_step2 = ApplicationLogs
+    | where Timestamp &gt; ago(7d)
+    | where Message has Step2
+    | distinct UserId;
+let users_step3 = ApplicationLogs
+    | where Timestamp &gt; ago(7d)
+    | where Message has Step3
+    | distinct UserId;
+print 
+    Started = toscalar(users_started | count),
+    ViewedProduct = toscalar(users_step1 | count),
+    AddedToCart = toscalar(users_step2 | count),
+    Checkout = toscalar(users_step3 | count)
+</div></code></pre>
+<h3 id="8-monitoring-et-alerting">8. Monitoring et Alerting</h3>
+<h4 id="sla-monitoring-availability">SLA monitoring (availability)</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(30d)
+| where ServiceName == &quot;ApiGateway&quot;
+| summarize 
+    TotalRequests = count(),
+    SuccessfulRequests = countif(ResponseCode &lt; 500),
+    Availability = round(countif(ResponseCode &lt; 500) * 100.0 / count(), 3)
+  by bin(Timestamp, 1d)
+| extend SLAMet = Availability &gt;= 99.9
+| project Timestamp, Availability, SLAMet
+</div></code></pre>
+<h4 id="d%C3%A9tection-de-pics-anormaux">Détection de pics anormaux</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(30d)
+| summarize RequestCount = count() by bin(Timestamp, 5m)
+| extend 
+    Baseline = series_stats_dynamic(RequestCount).avg,
+    StdDev = series_stats_dynamic(RequestCount).stdev
+| extend Threshold = Baseline + (3 * StdDev)
+| where RequestCount &gt; Threshold
+| project Timestamp, RequestCount, Baseline, Threshold
+</div></code></pre>
+<h4 id="health-check-des-services">Health check des services</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(5m)
+| summarize LastSeen = max(Timestamp) by ServiceName
+| extend 
+    Status = case(
+        LastSeen &gt; ago(2m), &quot;Healthy&quot;,
+        LastSeen &gt; ago(5m), &quot;Warning&quot;,
+        &quot;Critical&quot;
+    ),
+    MinutesSinceLastLog = datetime_diff('minute', now(), LastSeen)
+| project ServiceName, Status, MinutesSinceLastLog, LastSeen
+| order by Status desc, MinutesSinceLastLog desc
+</div></code></pre>
+<h3 id="9-optimisation-des-co%C3%BBts">9. Optimisation des Coûts</h3>
+<h4 id="top-services-par-volume-de-logs">Top services par volume de logs</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(30d)
+| summarize 
+    LogCount = count(),
+    EstimatedSizeGB = (count() * 500.0) / 1024 / 1024 / 1024 // Assuming ~500 bytes/log
+  by ServiceName
+| order by EstimatedSizeGB desc
+| extend CumulativePercentage = round(100.0 * row_cumsum(EstimatedSizeGB) / toscalar(summarize sum(EstimatedSizeGB)), 2)
+</div></code></pre>
+<h4 id="logs-de-faible-valeur-candidats-pour-r%C3%A9tention-r%C3%A9duite">Logs de faible valeur (candidats pour rétention réduite)</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Level == &quot;Debug&quot; or Level == &quot;Trace&quot;
+| where Timestamp &gt; ago(7d)
+| summarize 
+    Count = count(),
+    SizeEstimateGB = (count() * 500.0) / 1024 / 1024 / 1024
+  by ServiceName, Level
+| order by SizeEstimateGB desc
+</div></code></pre>
+<h3 id="10-requ%C3%AAtes-avanc%C3%A9es">10. Requêtes Avancées</h3>
+<h4 id="analyse-de-patterns-avec-regex">Analyse de patterns avec regex</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(24h)
+| extend 
+    OrderId = extract(@&quot;orderId=([A-Z0-9-]+)&quot;, 1, Message),
+    Amount = todouble(extract(@&quot;amount=(\d+\.?\d*)&quot;, 1, Message))
+| where isnotempty(OrderId)
+| summarize 
+    TotalAmount = sum(Amount),
+    OrderCount = dcount(OrderId)
+  by ServiceName
+</div></code></pre>
+<h4 id="join-avec-table-de-r%C3%A9f%C3%A9rence">Join avec table de référence</h4>
+<pre class="hljs"><code><div>// Table de référence des services
+let ServiceMetadata = datatable(ServiceName:string, Team:string, Tier:string)
+[
+    &quot;AuthService&quot;, &quot;Platform&quot;, &quot;Critical&quot;,
+    &quot;PaymentService&quot;, &quot;Finance&quot;, &quot;Critical&quot;,
+    &quot;NotificationService&quot;, &quot;Communication&quot;, &quot;Standard&quot;
+];
+ApplicationLogs
+| where Timestamp &gt; ago(1h)
+| summarize ErrorCount = countif(Level == &quot;Error&quot;) by ServiceName
+| join kind=leftouter ServiceMetadata on ServiceName
+| where Tier == &quot;Critical&quot;
+| order by ErrorCount desc
+</div></code></pre>
+<h4 id="pivot-dynamique">Pivot dynamique</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(24h)
+| summarize Count = count() by Level, ServiceName
+| evaluate pivot(Level, sum(Count))
+</div></code></pre>
+<h4 id="analyse-de-s%C3%A9ries-temporelles-avec-pr%C3%A9diction">Analyse de séries temporelles avec prédiction</h4>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(30d)
+| where ServiceName == &quot;ApiGateway&quot;
+| summarize RequestCount = count() by bin(Timestamp, 1h)
+| extend (predictions, pred_score) = series_decompose_forecast(RequestCount, 24) // Prédire 24h
+| render timechart
+</div></code></pre>
+<h2 id="fonctions-personnalis%C3%A9es">Fonctions Personnalisées</h2>
+<h3 id="fonction-pour-standardiser-les-logs">Fonction pour standardiser les logs</h3>
+<pre class="hljs"><code><div>.create-or-alter function ParseApplicationLog(logLevel:string) {
+    ApplicationLogs
+    | where Level == logLevel
+    | extend 
+        NormalizedTimestamp = bin(Timestamp, 1m),
+        ErrorCategory = case(
+            Exception contains &quot;Timeout&quot;, &quot;Timeout&quot;,
+            Exception contains &quot;Connection&quot;, &quot;Connection&quot;,
+            Exception contains &quot;Authentication&quot;, &quot;Auth&quot;,
+            &quot;Other&quot;
+        )
+    | project 
+        NormalizedTimestamp,
+        ServiceName,
+        ErrorCategory,
+        Message,
+        TraceId
+}
+
+// Utilisation
+ParseApplicationLog(&quot;Error&quot;)
+| where NormalizedTimestamp &gt; ago(1h)
+| summarize count() by ErrorCategory
+</div></code></pre>
+<h3 id="fonction-pour-calcul-de-sli">Fonction pour calcul de SLI</h3>
+<pre class="hljs"><code><div>.create-or-alter function CalculateSLI(serviceName:string, windowSize:timespan) {
+    ApplicationLogs
+    | where ServiceName == serviceName
+    | where Timestamp &gt; ago(windowSize)
+    | summarize 
+        TotalRequests = count(),
+        GoodRequests = countif(ResponseCode &lt; 500 and DurationMs &lt; 1000),
+        ErrorRequests = countif(ResponseCode &gt;= 500),
+        SlowRequests = countif(DurationMs &gt;= 1000)
+    | extend 
+        SLI = round(todouble(GoodRequests) * 100.0 / TotalRequests, 2),
+        ErrorRate = round(todouble(ErrorRequests) * 100.0 / TotalRequests, 2),
+        SlowRate = round(todouble(SlowRequests) * 100.0 / TotalRequests, 2)
+    | project SLI, ErrorRate, SlowRate, TotalRequests
+}
+
+// Utilisation
+CalculateSLI(&quot;PaymentService&quot;, 1h)
+</div></code></pre>
+<h2 id="best-practices-kql">Best Practices KQL</h2>
+<h3 id="performance">Performance</h3>
+<ol>
+<li><strong>Filtrer tôt</strong>: Toujours utiliser <code>where</code> avant <code>summarize</code> ou <code>join</code></li>
+<li><strong>Limiter les colonnes</strong>: Utiliser <code>project</code> pour réduire les données</li>
+<li><strong>Utiliser le cache</strong>: Requêtes sur hot cache (&lt; 14 jours par défaut)</li>
+<li><strong>Éviter les scans complets</strong>: Toujours spécifier une plage temporelle</li>
+</ol>
+<h3 id="lisibilit%C3%A9">Lisibilité</h3>
+<ol>
+<li><strong>Indentation</strong>: Une opération par ligne</li>
+<li><strong>Variables</strong>: Utiliser <code>let</code> pour requêtes complexes</li>
+<li><strong>Commentaires</strong>: Documenter la logique métier</li>
+<li><strong>Naming</strong>: Noms de colonnes explicites</li>
+</ol>
+<h3 id="exemple-de-requ%C3%AAte-bien-structur%C3%A9e">Exemple de requête bien structurée</h3>
+<pre class="hljs"><code><div>// Analyse des erreurs critiques avec impact business
+// Author: Platform Team | Date: 2024-06-15
+let timeRange = 24h;
+let errorThreshold = 100;
+let criticalServices = dynamic([&quot;PaymentService&quot;, &quot;AuthService&quot;, &quot;OrderService&quot;]);
+//
+ApplicationLogs
+| where Timestamp &gt; ago(timeRange)                    // Filtrage temporel
+| where Level in (&quot;Error&quot;, &quot;Critical&quot;)                // Filtrage par sévérité
+| where ServiceName in (criticalServices)             // Services critiques uniquement
+| extend ErrorCategory = extract(@&quot;^(\w+)Exception&quot;, 1, Exception)
+| summarize 
+    ErrorCount = count(),
+    AffectedUsers = dcount(UserId),
+    UniqueErrors = dcount(ErrorCategory),
+    SampleMessages = make_set(Message, 3)
+  by ServiceName, ErrorCategory
+| where ErrorCount &gt; errorThreshold                   // Seuil significatif
+| order by ErrorCount desc
+| project 
+    ServiceName,
+    ErrorCategory,
+    ErrorCount,
+    AffectedUsers,
+    SampleMessages
+</div></code></pre>
+<h2 id="ressources-compl%C3%A9mentaires">Ressources Complémentaires</h2>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kusto/query/">KQL Reference officielle</a></li>
+<li><a href="https://github.com/marcusbakker/KQL">KQL Cheat Sheet</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kusto/query/best-practices">Best Practices KQL</a></li>
+<li><a href="https://dataexplorer.azure.com/clusters/help/databases/Samples">Tutoriels interactifs</a></li>
+</ul>
+<h2 id="playground-pour-pratique">Playground pour Pratique</h2>
+<p>Microsoft propose un cluster de démonstration avec données samples:</p>
+<ul>
+<li>URL: https://dataexplorer.azure.com/</li>
+<li>Cluster: help</li>
+<li>Database: Samples</li>
+<li>Tables: StormEvents, ContosoSales, etc.</li>
+</ul>
+<p>Testez vos requêtes avant de les déployer en production!</p>
+<h1 id="executive-summary---solution-danalyse-de-logs-5tbjour">Executive Summary - Solution d'Analyse de Logs 5TB/Jour</h1>
+<h2 id="%F0%9F%8E%AF-objectif">🎯 Objectif</h2>
+<p>Analyser <strong>5 TB de logs par jour</strong> (~1.8 PB/an) avec des requêtes sub-secondes, latence d'ingestion &lt; 2 minutes, et coûts optimisés.</p>
+<h2 id="%E2%9C%85-solution-recommand%C3%A9e-azure-data-explorer-adx">✅ Solution Recommandée: Azure Data Explorer (ADX)</h2>
+<h3 id="pourquoi-adx">Pourquoi ADX?</h3>
+<table>
+<thead>
+<tr>
+<th>Critère</th>
+<th>ADX</th>
+<th>Alternatives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Performance Queries</strong></td>
+<td>⭐⭐⭐⭐⭐ Sub-seconde</td>
+<td>⭐⭐⭐ Secondes</td>
+</tr>
+<tr>
+<td><strong>Latence Ingestion</strong></td>
+<td>⭐⭐⭐⭐⭐ &lt; 2 min</td>
+<td>⭐⭐⭐ 5-15 min</td>
+</tr>
+<tr>
+<td><strong>Compression</strong></td>
+<td>⭐⭐⭐⭐⭐ 10:1</td>
+<td>⭐⭐⭐ 5:1</td>
+</tr>
+<tr>
+<td><strong>Coût</strong></td>
+<td>⭐⭐⭐⭐ Optimal</td>
+<td>⭐⭐ 2-3x plus cher</td>
+</tr>
+<tr>
+<td><strong>Scalabilité</strong></td>
+<td>⭐⭐⭐⭐⭐ Quasi-illimitée</td>
+<td>⭐⭐⭐ Complexe</td>
+</tr>
+<tr>
+<td><strong>Facilité</strong></td>
+<td>⭐⭐⭐⭐ KQL simple</td>
+<td>⭐⭐⭐ Varies</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%F0%9F%93%8A-architecture-en-5-minutes">📊 Architecture en 5 Minutes</h2>
+<pre class="hljs"><code><div>Applications/Services (5TB/jour)
+         ↓
+   Agents Collecte (Fluentd/Vector)
+         ↓
+   Event Hubs (32 partitions)
+         ↓
+   Azure Data Explorer (8 nœuds)
+         ├→ Hot Cache SSD (7 jours)
+         ├→ Hot Storage (90 jours)
+         └→ Cold Storage (1-2 ans)
+         ↓
+   Dashboards (Power BI/Grafana/KQL)
+</div></code></pre>
+<h2 id="%F0%9F%92%B0-co%C3%BBts-mensuels-r%C3%A9sum%C3%A9">💰 Coûts Mensuels (Résumé)</h2>
+<table>
+<thead>
+<tr>
+<th>Scénario</th>
+<th style="text-align:right">Coût/Mois</th>
+<th style="text-align:right">Coût/An</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Minimal (Dev/Test)</strong></td>
+<td style="text-align:right">$5,000</td>
+<td style="text-align:right">$60,000</td>
+<td>POC, développement</td>
+</tr>
+<tr>
+<td><strong>Production Standard</strong></td>
+<td style="text-align:right">$15,291</td>
+<td style="text-align:right">$183,492</td>
+<td>Production baseline</td>
+</tr>
+<tr>
+<td><strong>Optimisé (RI 3 ans)</strong></td>
+<td style="text-align:right">$13,465</td>
+<td style="text-align:right">$161,580</td>
+<td>⭐ <strong>RECOMMANDÉ</strong></td>
+</tr>
+<tr>
+<td><strong>Enterprise HA</strong></td>
+<td style="text-align:right">$17,273</td>
+<td style="text-align:right">$207,276</td>
+<td>Multi-région, SLA 99.99%</td>
+</tr>
+</tbody>
+</table>
+<h3 id="d%C3%A9tail-co%C3%BBt-production-optimis%C3%A9e-13465mois">Détail Coût Production Optimisée ($13,465/mois)</h3>
+<pre class="hljs"><code><div>ADX Compute (RI 3 ans):  $3,835  (28%)
+ADX Hot Storage:         $3,600  (27%)
+Event Hubs:              $3,456  (26%)
+Blob Cold Storage:       $1,674  (12%)
+Network:                   $500  (4%)
+Monitoring:                $400  (3%)
+─────────────────────────────────
+TOTAL:                  $13,465
+</div></code></pre>
+<h2 id="%F0%9F%8F%97%EF%B8%8F-sp%C3%A9cifications-techniques">🏗️ Spécifications Techniques</h2>
+<h3 id="cluster-adx">Cluster ADX</h3>
+<table>
+<thead>
+<tr>
+<th>Composant</th>
+<th>Spécification</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Nœuds</strong></td>
+<td>8 × Standard_E16s_v5</td>
+</tr>
+<tr>
+<td><strong>vCPUs</strong></td>
+<td>128 cores total</td>
+</tr>
+<tr>
+<td><strong>RAM</strong></td>
+<td>1 TB total</td>
+</tr>
+<tr>
+<td><strong>Hot Cache SSD</strong></td>
+<td>4 TB (7-14 jours)</td>
+</tr>
+<tr>
+<td><strong>Capacité Ingestion</strong></td>
+<td>1,600 GB/h (marge 3x)</td>
+</tr>
+<tr>
+<td><strong>Availability</strong></td>
+<td>3 Availability Zones</td>
+</tr>
+</tbody>
+</table>
+<h3 id="stockage">Stockage</h3>
+<table>
+<thead>
+<tr>
+<th>Tier</th>
+<th>Rétention</th>
+<th>Volume</th>
+<th>Latence Query</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Hot Cache</strong></td>
+<td>7-14 jours</td>
+<td>350-700 GB</td>
+<td>100-500 ms</td>
+</tr>
+<tr>
+<td><strong>Hot Storage</strong></td>
+<td>90 jours</td>
+<td>3-4.5 TB</td>
+<td>500ms-2s</td>
+</tr>
+<tr>
+<td><strong>Cold Storage</strong></td>
+<td>1-2 ans</td>
+<td>18-36 TB</td>
+<td>2-5s</td>
+</tr>
+</tbody>
+</table>
+<h3 id="ingestion">Ingestion</h3>
+<table>
+<thead>
+<tr>
+<th>Méthode</th>
+<th>Latence</th>
+<th>Débit</th>
+<th style="text-align:right">Coût/Mois</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Event Hubs</strong> (⭐ Recommandé)</td>
+<td>&lt; 2 min</td>
+<td>208 GB/h</td>
+<td style="text-align:right">$3,456</td>
+</tr>
+<tr>
+<td><strong>Blob Storage</strong></td>
+<td>5-15 min</td>
+<td>Illimité</td>
+<td style="text-align:right">$150</td>
+</tr>
+<tr>
+<td><strong>Hybrid</strong></td>
+<td>Variable</td>
+<td>Mix</td>
+<td style="text-align:right">$1,800</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%F0%9F%93%88-performance-garanties">📈 Performance Garanties</h2>
+<table>
+<thead>
+<tr>
+<th>Métrique</th>
+<th>Valeur</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Query Latency (hot cache)</strong></td>
+<td>&lt; 500 ms</td>
+</tr>
+<tr>
+<td><strong>Query Latency (hot storage)</strong></td>
+<td>&lt; 2 secondes</td>
+</tr>
+<tr>
+<td><strong>Ingestion Latency</strong></td>
+<td>&lt; 2 minutes</td>
+</tr>
+<tr>
+<td><strong>Compression Ratio</strong></td>
+<td>10:1 (5TB → 500GB)</td>
+</tr>
+<tr>
+<td><strong>Concurrent Queries</strong></td>
+<td>100+</td>
+</tr>
+<tr>
+<td><strong>SLA Availability</strong></td>
+<td>99.9% (99.99% multi-région)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%F0%9F%94%91-fonctionnalit%C3%A9s-cl%C3%A9s">🔑 Fonctionnalités Clés</h2>
+<h3 id="ingestion">Ingestion</h3>
+<ul>
+<li>✅ Streaming temps réel (Event Hubs)</li>
+<li>✅ Batch processing (Blob Storage)</li>
+<li>✅ Formats multiples (JSON, Parquet, CSV, Avro)</li>
+<li>✅ Compression automatique (10:1)</li>
+<li>✅ Transformation à l'ingestion (Update Policies)</li>
+</ul>
+<h3 id="querying-kql">Querying (KQL)</h3>
+<ul>
+<li>✅ Langage SQL-like puissant et intuitif</li>
+<li>✅ Time series analysis natives</li>
+<li>✅ Anomaly detection intégrée</li>
+<li>✅ Joins multi-tables</li>
+<li>✅ Agrégations complexes</li>
+<li>✅ Visualisations intégrées</li>
+</ul>
+<h3 id="s%C3%A9curit%C3%A9">Sécurité</h3>
+<ul>
+<li>✅ Azure AD authentication</li>
+<li>✅ Row Level Security (RLS)</li>
+<li>✅ Chiffrement at-rest &amp; in-transit</li>
+<li>✅ VNet integration &amp; Private Endpoints</li>
+<li>✅ Audit logs complets</li>
+<li>✅ GDPR compliant (data purge)</li>
+</ul>
+<h3 id="op%C3%A9rations">Opérations</h3>
+<ul>
+<li>✅ Auto-scaling (vertical + horizontal)</li>
+<li>✅ Monitoring intégré (Azure Monitor)</li>
+<li>✅ Alertes configurables</li>
+<li>✅ Disaster Recovery (follower databases)</li>
+<li>✅ Continuous backup</li>
+<li>✅ Multi-tenant isolation</li>
+</ul>
+<h2 id="%F0%9F%9A%80-quick-start-3-%C3%A9tapes">🚀 Quick Start (3 Étapes)</h2>
+<h3 id="1-cr%C3%A9er-le-cluster-adx-15-min">1. Créer le Cluster ADX (15 min)</h3>
+<pre class="hljs"><code><div>az kusto cluster create \
+  --cluster-name <span class="hljs-string">"loganalysis-prod-adx"</span> \
+  --resource-group <span class="hljs-string">"rg-loganalysis-prod"</span> \
+  --location <span class="hljs-string">"westeurope"</span> \
+  --sku Standard_E16s_v5 \
+  --capacity 8 \
+  --<span class="hljs-built_in">enable</span>-streaming-ingest <span class="hljs-literal">true</span> \
+  --zones <span class="hljs-string">"1,2,3"</span>
+</div></code></pre>
+<h3 id="2-configurer-ingestion-10-min">2. Configurer Ingestion (10 min)</h3>
+<pre class="hljs"><code><div><span class="hljs-comment"># Event Hub</span>
+az eventhubs eventhub create \
+  --name <span class="hljs-string">"application-logs"</span> \
+  --namespace-name <span class="hljs-string">"loganalysis-prod-eh"</span> \
+  --partition-count 32
+</div></code></pre>
+<h3 id="3-cr%C3%A9er-table-et-ingestion-5-min">3. Créer Table et Ingestion (5 min)</h3>
+<pre class="hljs"><code><div>.create table ApplicationLogs (
+    Timestamp: datetime,
+    Level: string,
+    Message: string,
+    ServiceName: string,
+    [...]
+)
+
+.create data connection EventHubConnection [...]
+</div></code></pre>
+<p><strong>Total Time to Value: ~30 minutes</strong> ⚡</p>
+<h2 id="%F0%9F%93%8A-exemples-de-requ%C3%AAtes-kql">📊 Exemples de Requêtes KQL</h2>
+<h3 id="top-erreurs">Top Erreurs</h3>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Level == &quot;Error&quot; and Timestamp &gt; ago(24h)
+| summarize Count = count() by ErrorType = extract(@&quot;Exception: ([^:]+)&quot;, 1, Exception)
+| top 10 by Count desc
+</div></code></pre>
+<h3 id="performance-p95">Performance P95</h3>
+<pre class="hljs"><code><div>ApplicationLogs
+| where Timestamp &gt; ago(1h)
+| summarize P95 = percentile(DurationMs, 95) by ServiceName
+| order by P95 desc
+</div></code></pre>
+<h3 id="d%C3%A9tection-anomalies">Détection Anomalies</h3>
+<pre class="hljs"><code><div>ApplicationLogs
+| make-series ErrorRate = countif(Level == &quot;Error&quot;) * 100.0 / count()
+    default=0 on Timestamp step 5m
+| extend (anomalies, score) = series_decompose_anomalies(ErrorRate, 1.5)
+| where anomalies &gt; 0
+</div></code></pre>
+<h2 id="%F0%9F%8E%AF-roi-et-b%C3%A9n%C3%A9fices">🎯 ROI et Bénéfices</h2>
+<h3 id="co%C3%BBts-%C3%A9vit%C3%A9s">Coûts Évités</h3>
+<table>
+<thead>
+<tr>
+<th>Catégorie</th>
+<th>Sans ADX</th>
+<th>Avec ADX</th>
+<th>Économie</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Temps debugging</strong></td>
+<td>100h/mois</td>
+<td>40h/mois</td>
+<td>60h × $100 = <strong>$6,000/mois</strong></td>
+</tr>
+<tr>
+<td><strong>MTTR (incidents)</strong></td>
+<td>4 heures</td>
+<td>1.5 heures</td>
+<td>62% réduction</td>
+</tr>
+<tr>
+<td><strong>Incidents évités</strong></td>
+<td>-</td>
+<td>30% réduction</td>
+<td><strong>$30,000+/mois</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="roi-positif-en-3-6-mois-%F0%9F%93%88">ROI: <strong>Positif en 3-6 mois</strong> 📈</h3>
+<h3 id="b%C3%A9n%C3%A9fices-business">Bénéfices Business</h3>
+<p><strong>Quantifiables</strong>:</p>
+<ul>
+<li>⬇️ 60% temps debugging</li>
+<li>⬇️ 40% MTTR (Mean Time To Restore)</li>
+<li>⬇️ 30% incidents production</li>
+<li>⬆️ 90% query performance vs alternatives</li>
+</ul>
+<p><strong>Qualitatifs</strong>:</p>
+<ul>
+<li>Meilleure satisfaction clients (moins de downtime)</li>
+<li>Insights business (analytics sur comportement users)</li>
+<li>Compliance améliorée (audit trails complets)</li>
+<li>Confiance équipes (visibilité totale)</li>
+</ul>
+<h2 id="%F0%9F%93%85-roadmap-de-d%C3%A9ploiement">📅 Roadmap de Déploiement</h2>
+<h3 id="mois-1-2-foundation">Mois 1-2: Foundation</h3>
+<ul>
+<li>✅ Cluster ADX minimal (6 nœuds)</li>
+<li>✅ Ingestion batch via Blob</li>
+<li>✅ Tables et schemas de base</li>
+<li>✅ KQL queries basiques</li>
+<li><strong>Budget</strong>: $5,000-7,000/mois</li>
+</ul>
+<h3 id="mois-3-4-production">Mois 3-4: Production</h3>
+<ul>
+<li>✅ Cluster production (8 nœuds)</li>
+<li>✅ Event Hubs streaming</li>
+<li>✅ Update policies</li>
+<li>✅ Dashboards Power BI/Grafana</li>
+<li><strong>Budget</strong>: $15,000-18,000/mois</li>
+</ul>
+<h3 id="mois-5-6-optimisation">Mois 5-6: Optimisation</h3>
+<ul>
+<li>✅ Reserved Instances (RI 3 ans)</li>
+<li>✅ Materialized views</li>
+<li>✅ Tiered storage</li>
+<li>✅ Auto-scaling</li>
+<li><strong>Budget</strong>: $13,000-15,000/mois ⭐</li>
+</ul>
+<h3 id="mois-7-excellence">Mois 7+: Excellence</h3>
+<ul>
+<li>✅ Multi-région (DR)</li>
+<li>✅ ML anomaly detection</li>
+<li>✅ Self-service analytics</li>
+<li>✅ Advanced security (RLS)</li>
+<li><strong>Budget</strong>: $15,000-20,000/mois</li>
+</ul>
+<h2 id="%F0%9F%94%84-comparaison-alternatives">🔄 Comparaison Alternatives</h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th style="text-align:right">Coût/Mois</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Azure Data Explorer</strong></td>
+<td style="text-align:right"><strong>$13,465</strong></td>
+<td>⭐ Performance, KQL, Azure natif</td>
+<td>Courbe apprentissage KQL</td>
+</tr>
+<tr>
+<td>Elasticsearch (AKS)</td>
+<td style="text-align:right">$8,000</td>
+<td>Mature, flexible</td>
+<td>Complexité opérationnelle</td>
+</tr>
+<tr>
+<td>Elastic Cloud</td>
+<td style="text-align:right">$15,000</td>
+<td>Managé</td>
+<td>Coût élevé</td>
+</tr>
+<tr>
+<td>Splunk Cloud</td>
+<td style="text-align:right">$30,000+</td>
+<td>Très mature</td>
+<td>Très cher</td>
+</tr>
+<tr>
+<td>Datadog Logs</td>
+<td style="text-align:right">$25,000+</td>
+<td>SaaS simple</td>
+<td>Très cher à scale</td>
+</tr>
+<tr>
+<td>AWS OpenSearch</td>
+<td style="text-align:right">$10,000</td>
+<td>Managé AWS</td>
+<td>Pas Azure natif</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Verdict</strong>: ADX = <strong>Meilleur ratio performance/coût</strong> pour Azure + 5TB/jour</p>
+<h2 id="%F0%9F%93%8B-checklist-d%C3%A9cision">📋 Checklist Décision</h2>
+<h3 id="%E2%9C%85-adx-est-le-bon-choix-si">✅ ADX est le bon choix si:</h3>
+<ul>
+<li>✅ Volume &gt; 1 TB/jour</li>
+<li>✅ Besoin queries complexes et rapides</li>
+<li>✅ Infrastructure Azure</li>
+<li>✅ Budget $10,000-20,000/mois OK</li>
+<li>✅ Équipe peut apprendre KQL (facile)</li>
+<li>✅ Besoin streaming temps réel</li>
+</ul>
+<h3 id="%E2%9A%A0%EF%B8%8F-consid%C3%A9rer-alternatives-si">⚠️ Considérer alternatives si:</h3>
+<ul>
+<li>❌ Volume &lt; 100 GB/jour (Azure Log Analytics suffit)</li>
+<li>❌ Budget &lt; $5,000/mois (Elasticsearch self-hosted)</li>
+<li>❌ Déjà investissement lourd Splunk/Elastic</li>
+<li>❌ Queries simples uniquement (grep suffit)</li>
+<li>❌ Pas d'infrastructure Azure</li>
+</ul>
+<h2 id="%F0%9F%93%9A-documentation-compl%C3%A8te">📚 Documentation Complète</h2>
+<table>
+<thead>
+<tr>
+<th>Document</th>
+<th>Description</th>
+<th>Pages</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><a href="./README.md">README.md</a></strong></td>
+<td>Navigation et quick start</td>
+<td>🏠</td>
+</tr>
+<tr>
+<td><strong><a href="./architecture.md">architecture.md</a></strong></td>
+<td>Architecture globale</td>
+<td>📐</td>
+</tr>
+<tr>
+<td><strong><a href="./adx-solution.md">adx-solution.md</a></strong></td>
+<td>Détails techniques ADX</td>
+<td>🔧</td>
+</tr>
+<tr>
+<td><strong><a href="./kql-examples.md">kql-examples.md</a></strong></td>
+<td>50+ exemples KQL</td>
+<td>📊</td>
+</tr>
+<tr>
+<td><strong><a href="./data-ingestion.md">data-ingestion.md</a></strong></td>
+<td>Stratégies ingestion</td>
+<td>🔄</td>
+</tr>
+<tr>
+<td><strong><a href="./cost-estimation.md">cost-estimation.md</a></strong></td>
+<td>Analyse financière détaillée</td>
+<td>💰</td>
+</tr>
+<tr>
+<td><strong><a href="./diagrams/">diagrams/*.puml</a></strong></td>
+<td>Diagrammes architecture</td>
+<td>🎨</td>
+</tr>
+</tbody>
+</table>
+<h2 id="%F0%9F%8E%93-ressources-dapprentissage">🎓 Ressources d'Apprentissage</h2>
+<h3 id="kql-30-min-pour-devenir-op%C3%A9rationnel">KQL (30 min pour devenir opérationnel)</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kql-quick-reference">KQL Quick Reference</a></li>
+<li><a href="https://dataexplorer.azure.com/clusters/help/databases/Samples">KQL Playground</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/kusto/query/tutorial">KQL Tutorial</a></li>
+</ul>
+<h3 id="adx">ADX</h3>
+<ul>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/">ADX Documentation</a></li>
+<li><a href="https://docs.microsoft.com/azure/data-explorer/best-practices">Best Practices</a></li>
+<li><a href="https://dataexplorer.azure.com/">ADX Web UI</a></li>
+</ul>
+<h3 id="pricing">Pricing</h3>
+<ul>
+<li><a href="https://azure.microsoft.com/pricing/calculator/">Azure Calculator</a></li>
+<li><a href="https://azure.microsoft.com/pricing/details/data-explorer/">ADX Pricing</a></li>
+</ul>
+<h2 id="%F0%9F%8F%86-conclusion">🏆 Conclusion</h2>
+<p><strong>Pour analyser 5 TB/jour de logs:</strong></p>
+<ol>
+<li><strong>Solution</strong>: Azure Data Explorer avec Event Hubs</li>
+<li><strong>Coût</strong>: $13,465/mois optimisé (RI 3 ans)</li>
+<li><strong>Performance</strong>: Sub-seconde queries, &lt;2 min ingestion</li>
+<li><strong>ROI</strong>: 3-6 mois</li>
+<li><strong>Time to Value</strong>: 30 minutes pour premier cluster</li>
+</ol>
+<p><strong>Recommandation</strong>: ⭐ <strong>GO</strong> - Meilleure solution pour ce use case</p>
+<hr>
+<p><strong>Next Steps</strong>:</p>
+<ol>
+<li>✅ Review cette documentation</li>
+<li>✅ Approuver budget (~$15K/mois)</li>
+<li>✅ Provisionner environnement pilote ($5K/mois)</li>
+<li>✅ Former équipe sur KQL (2-3 jours)</li>
+<li>✅ Migration progressive (3-6 mois)</li>
+</ol>
+<p><strong>Questions?</strong> Ouvrir une issue dans ce repository.</p>
+
+</body>
+</html>

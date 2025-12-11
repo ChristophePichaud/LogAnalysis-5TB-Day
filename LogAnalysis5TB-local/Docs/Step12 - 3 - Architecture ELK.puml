@@ -1,0 +1,10 @@
+@startuml
+RECTANGLE "Sources de logs" as Sources
+RECTANGLE "Filebeat / Logstash" as Logstash
+RECTANGLE "Elasticsearch" as ES
+RECTANGLE "Kibana" as Kibana
+
+Sources --> Logstash
+Logstash --> ES
+ES --> Kibana
+@enduml

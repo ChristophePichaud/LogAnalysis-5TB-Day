@@ -1,0 +1,1179 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>_LeDossierDArchitecture.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="table-des-mati%C3%A8res-du-dossier-darchitecture">Table des matières du dossier d'architecture</h1>
+<ol>
+<li><strong>Step1-ADX-KQL.md</strong> : Focus détaillé sur Azure Data Explorer (ADX) avec KQL</li>
+<li><strong>Step2-Comparaison-Cout-ADX-Splunk.md</strong> : Comparaison des coûts ADX vs Splunk</li>
+<li><strong>Step3-LogAnalytics-Logs-Chauds.md</strong> : Azure Log Analytics pour logs chauds</li>
+<li><strong>Step4-Databricks-ADLS-Logs-Froids.md</strong> : Databricks/ADLS pour logs froids</li>
+<li><strong>Step5-Conversion-SPL-KQL.md</strong> : Conversion SPL vers KQL</li>
+<li><strong>Step6-ELK-Stack-Azure.md</strong> : ELK Stack sur Azure</li>
+<li><strong>Step7-Risques-Migration.md</strong> : Analyse des risques de migration</li>
+<li><strong>Step8-Estimation-Financiere.md</strong> : Estimation financière des solutions</li>
+<li><strong>Step9-TableauDeBord-Synthese.md</strong> : Tableau de bord synthétique</li>
+<li><strong>Step10-Plan-Migration-ADX.md</strong> : Plan de migration ADX</li>
+<li><strong>Step11-Outils-Ingestion-Azure.md</strong> : Outils d'ingestion pour Azure</li>
+<li><strong>Step12-Schemas-Architecture-PlantUML.md</strong> : Schémas d'architecture cible (PlantUML)</li>
+</ol>
+<p>Chaque fichier correspond à une étape clé de l'analyse et de la proposition d'architecture pour la migration de la solution d'analyse de logs.</p>
+<blockquote>
+<p>Utilisez ce plan pour naviguer et organiser la rédaction de votre dossier d'architecture.</p>
+</blockquote>
+<h1 id="step-1--focus-sur-azure-data-explorer-adx-avec-kql">Step 1 : Focus sur Azure Data Explorer (ADX) avec KQL</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Fournir une analyse détaillée d'une solution basée sur Azure Data Explorer (ADX) pour l'analyse de 5 To de logs par jour, en utilisant Kusto Query Language (KQL).</p>
+<h2 id="1-pr%C3%A9sentation-dadx-et-de-kql">1. Présentation d'ADX et de KQL</h2>
+<p><strong>Azure Data Explorer (ADX)</strong> est un service d'analyse de données massives (Big Data) en mode PaaS sur Azure, optimisé pour l'ingestion rapide, l'indexation et l'interrogation de très grands volumes de données, notamment des logs, métriques, traces et événements.</p>
+<p><strong>Kusto Query Language (KQL)</strong> est le langage de requête natif d'ADX, conçu pour l'exploration interactive, l'analyse et la visualisation de données structurées et semi-structurées.</p>
+<p><strong>Principales caractéristiques :</strong></p>
+<ul>
+<li>Ingestion rapide (plusieurs To/heure)</li>
+<li>Indexation automatique et stockage columnar</li>
+<li>Requêtes analytiques puissantes et interactives</li>
+<li>Intégration avec Power BI, Logic Apps, Azure Monitor, etc.</li>
+</ul>
+<h2 id="2-architecture-type-pour-ingestion-massive">2. Architecture type pour ingestion massive</h2>
+<p>Une architecture ADX pour 5 To/jour s'articule généralement autour des composants suivants :</p>
+<ul>
+<li><strong>Sources de logs</strong> : applications, serveurs, appliances réseau, etc.</li>
+<li><strong>Outils d'ingestion</strong> : Azure Data Collector, Event Hub, IoT Hub, Logstash, Azure Data Factory, etc.</li>
+<li><strong>Cluster ADX</strong> : dimensionné selon le volume, la rétention et la complexité des requêtes.</li>
+<li><strong>Stockage</strong> : stockage interne ADX (hot) + possibilité d'export vers ADLS (cold/archivage)</li>
+<li><strong>Accès et analyse</strong> : KQL via portail Azure, API, Power BI, notebooks, etc.</li>
+</ul>
+<p><img src="https://learn.microsoft.com/fr-fr/azure/data-explorer/media/data-explorer-overview/data-explorer-architecture.png" alt="Exemple d'architecture ADX"></p>
+<h2 id="3-scalabilit%C3%A9-performance-s%C3%A9curit%C3%A9">3. Scalabilité, performance, sécurité</h2>
+<ul>
+<li><strong>Scalabilité</strong> :
+<ul>
+<li>ADX supporte le scale-out horizontal (ajout de nœuds) et vertical (puissance des nœuds).</li>
+<li>Peut gérer des pics d'ingestion et de requêtes analytiques.</li>
+</ul>
+</li>
+<li><strong>Performance</strong> :
+<ul>
+<li>Indexation automatique, partitionnement temporel, cache mémoire.</li>
+<li>Latence faible pour l'interrogation de données récentes.</li>
+</ul>
+</li>
+<li><strong>Sécurité</strong> :
+<ul>
+<li>Authentification Azure AD, RBAC, chiffrement au repos et en transit.</li>
+<li>Audit, gestion fine des accès, intégration SIEM.</li>
+</ul>
+</li>
+</ul>
+<h2 id="4-cas-dusage-pour-lanalyse-de-logs">4. Cas d'usage pour l'analyse de logs</h2>
+<ul>
+<li>Supervision de SI/SOC (Security Information &amp; Event Management)</li>
+<li>Analyse de logs applicatifs, réseau, infrastructure</li>
+<li>Détection d'anomalies, alerting temps réel</li>
+<li>Reporting réglementaire, conformité</li>
+<li>Exploration ad hoc par les analystes (KQL)</li>
+</ul>
+<h2 id="5-avantages-et-limites">5. Avantages et limites</h2>
+<h3 id="avantages">Avantages</h3>
+<ul>
+<li>Solution managée, haute disponibilité native</li>
+<li>Très forte capacité d'ingestion et d'interrogation</li>
+<li>Coût compétitif pour de gros volumes (vs Splunk)</li>
+<li>Langage KQL puissant et documenté</li>
+<li>Intégration avec l'écosystème Azure</li>
+</ul>
+<h3 id="limites">Limites</h3>
+<ul>
+<li>Courbe d'apprentissage KQL pour les équipes habituées à SPL</li>
+<li>Nécessite un dimensionnement précis pour optimiser le coût</li>
+<li>Moins adapté à l'archivage long terme (préférer ADLS/Databricks pour le cold)</li>
+<li>Dépendance à l'écosystème Azure</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+Azure Data Explorer (ADX) est une solution robuste, scalable et performante pour l'analyse de très grands volumes de logs, particulièrement adaptée à des besoins de requêtage interactif, d'alerting et de supervision temps réel. Son adoption nécessite un accompagnement à la montée en compétence sur KQL et une réflexion sur l'architecture d'ingestion et de stockage selon les besoins de rétention.</p>
+<h1 id="step-2--comparaison-des-co%C3%BBts-adx-vs-splunk">Step 2 : Comparaison des coûts ADX vs Splunk</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Comparer le coût estimé d'un cluster Azure Data Explorer (ADX) traitant 5 To/jour avec les coûts typiques d'une solution Splunk équivalente.</p>
+<h2 id="1-m%C3%A9thodologie-destimation-des-co%C3%BBts">1. Méthodologie d'estimation des coûts</h2>
+<p>L'estimation s'appuie sur :</p>
+<ul>
+<li>Les calculateurs officiels Azure et Splunk</li>
+<li>Les modèles de tarification publics (PaaS pour ADX, licence/consommation pour Splunk)</li>
+<li>Les hypothèses de volume, rétention, et usage</li>
+</ul>
+<h2 id="2-hypoth%C3%A8ses-de-dimensionnement">2. Hypothèses de dimensionnement</h2>
+<ul>
+<li><strong>Volume de logs</strong> : 5 To/jour (ingestion)</li>
+<li><strong>Rétention</strong> : 30 jours (hot), 365 jours (cold)</li>
+<li><strong>Utilisateurs</strong> : 20 analystes, 5 administrateurs</li>
+<li><strong>Requêtes</strong> : 80% analytiques, 20% alerting</li>
+<li><strong>Région Azure</strong> : Europe Ouest</li>
+</ul>
+<h2 id="3-simulation-de-co%C3%BBt-adx">3. Simulation de coût ADX</h2>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Hypothèse</th>
+<th>Coût mensuel estimé (EUR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster ADX (D14_v2)</td>
+<td>2 nœuds, 30 jours, 24/7</td>
+<td>~7 500 €</td>
+</tr>
+<tr>
+<td>Stockage hot (30j)</td>
+<td>150 To</td>
+<td>~1 500 €</td>
+</tr>
+<tr>
+<td>Stockage cold (ADLS)</td>
+<td>1,7 Po (365j)</td>
+<td>~2 000 €</td>
+</tr>
+<tr>
+<td>Réseau, monitoring</td>
+<td>Divers</td>
+<td>~500 €</td>
+</tr>
+<tr>
+<td><strong>Total ADX</strong></td>
+<td></td>
+<td><strong>~11 500 €</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Remarque</strong> : Les coûts peuvent varier selon le dimensionnement, la compression, la région et les optimisations d'ingestion.</p>
+</blockquote>
+<h2 id="4-simulation-de-co%C3%BBt-splunk">4. Simulation de coût Splunk</h2>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Hypothèse</th>
+<th>Coût mensuel estimé (EUR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Licence Splunk</td>
+<td>5 To/jour (ingest)</td>
+<td>~25 000 €</td>
+</tr>
+<tr>
+<td>Infrastructure</td>
+<td>VM, stockage, support</td>
+<td>~5 000 €</td>
+</tr>
+<tr>
+<td>Maintenance/Support</td>
+<td>Divers</td>
+<td>~2 000 €</td>
+</tr>
+<tr>
+<td><strong>Total Splunk</strong></td>
+<td></td>
+<td><strong>~32 000 €</strong></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Remarque</strong> : Les coûts Splunk sont très sensibles au volume ingéré et à la politique de licence. Les offres cloud Splunk peuvent être plus chères.</p>
+</blockquote>
+<h2 id="5-synth%C3%A8se-comparative">5. Synthèse comparative</h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Coût mensuel estimé</th>
+<th>Points forts</th>
+<th>Points faibles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADX</td>
+<td>~11 500 €</td>
+<td>Scalabilité, coût, cloud natif</td>
+<td>Courbe KQL, dépendance Azure</td>
+</tr>
+<tr>
+<td>Splunk</td>
+<td>~32 000 €</td>
+<td>Maturité, écosystème, support</td>
+<td>Coût, scalabilité limitée</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Conclusion :</strong>
+Azure Data Explorer (ADX) offre un avantage financier significatif pour de très gros volumes de logs, tout en restant performant et flexible. Splunk reste une référence en termes de fonctionnalités, mais son coût devient prohibitif à grande échelle.</p>
+<h1 id="step-3--azure-log-analytics-pour-logs-chauds">Step 3 : Azure Log Analytics pour logs chauds</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Analyser l'intérêt d'Azure Log Analytics pour la gestion des logs chauds (rétention 7-14 jours, alertes temps réel).</p>
+<h2 id="1-fonctionnalit%C3%A9s-principales">1. Fonctionnalités principales</h2>
+<ul>
+<li>Collecte centralisée de logs, métriques et traces depuis de multiples sources Azure et on-premises</li>
+<li>Analyse en temps réel via KQL (Kusto Query Language)</li>
+<li>Déclenchement d'alertes, automatisation (Logic Apps, Azure Monitor)</li>
+<li>Tableaux de bord interactifs, visualisation intégrée</li>
+<li>Intégration native avec Sentinel (SIEM), Application Insights, ADX</li>
+</ul>
+<h2 id="2-architecture-dint%C3%A9gration">2. Architecture d'intégration</h2>
+<p>L'architecture type pour la gestion des logs chauds avec Log Analytics :</p>
+<ul>
+<li><strong>Sources</strong> : VM, PaaS Azure, appliances, agents Log Analytics, Event Hub</li>
+<li><strong>Workspace Log Analytics</strong> : point central de collecte et d'analyse</li>
+<li><strong>Alerting</strong> : règles d'alerte, actions automatisées</li>
+<li><strong>Connecteurs</strong> : export vers ADX, Power BI, SIEM, stockage externe</li>
+</ul>
+<p><img src="https://learn.microsoft.com/fr-fr/azure/azure-monitor/media/logs/log-analytics-architecture.png" alt="Architecture Log Analytics"></p>
+<h2 id="3-sc%C3%A9narios-dusage">3. Scénarios d'usage</h2>
+<ul>
+<li>Supervision opérationnelle (infrastructure, applicatif)</li>
+<li>Détection d'incidents et alerting temps réel</li>
+<li>Analyse rapide sur 7-14 jours de logs récents</li>
+<li>Investigation de sécurité (avec Azure Sentinel)</li>
+</ul>
+<h2 id="4-limites-et-compl%C3%A9mentarit%C3%A9s-avec-adx">4. Limites et complémentarités avec ADX</h2>
+<h3 id="limites">Limites</h3>
+<ul>
+<li>Coût élevé pour de très gros volumes (&gt;1 To/jour)</li>
+<li>Rétention limitée (max 2 ans, coût croissant)</li>
+<li>Moins adapté à l'analyse massive historique (préférer ADX ou Databricks pour le cold)</li>
+</ul>
+<h3 id="compl%C3%A9mentarit%C3%A9s">Complémentarités</h3>
+<ul>
+<li>Utiliser Log Analytics pour l'ingestion, l'alerting et l'analyse rapide sur logs chauds</li>
+<li>Exporter les données vers ADX pour l'analyse avancée, la rétention longue et l'exploration massive</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+Azure Log Analytics est idéal pour la gestion des logs chauds, l'alerting temps réel et la supervision opérationnelle. Pour des besoins d'analyse massive ou de rétention longue, il est pertinent de le coupler à ADX ou à une solution de stockage/traitement Big Data.</p>
+<h1 id="step-4--databricksadls-pour-logs-froids">Step 4 : Databricks/ADLS pour logs froids</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Explorer l'utilisation de Databricks et Azure Data Lake Storage (ADLS) pour l'archivage long terme et l'analyse massive de logs froids.</p>
+<h2 id="1-architecture-cible">1. Architecture cible</h2>
+<ul>
+<li><strong>Sources</strong> : Export de logs depuis ADX, Log Analytics, appliances, applications</li>
+<li><strong>Stockage</strong> : Azure Data Lake Storage Gen2 (ADLS) pour l'archivage longue durée (plusieurs Po possibles)</li>
+<li><strong>Traitement</strong> : Azure Databricks (Spark) pour l'analyse batch, l'exploration, le machine learning</li>
+<li><strong>Accès</strong> : Notebooks Databricks, Power BI, API, jobs automatisés</li>
+</ul>
+<p><img src="https://learn.microsoft.com/fr-fr/azure/databricks/_static/images/architecture/architecture-overview.png" alt="Architecture Databricks-ADLS"></p>
+<h2 id="2-sc%C3%A9narios-danalyse-a-posteriori">2. Scénarios d'analyse a posteriori</h2>
+<ul>
+<li>Recherche d'incidents sur de longues périodes (compliance, forensic)</li>
+<li>Analyses statistiques massives (tendances, corrélations, ML)</li>
+<li>Requêtes ad hoc sur de très grands volumes (logs froids)</li>
+<li>Ré-entraînement de modèles de détection d'anomalies</li>
+</ul>
+<h2 id="3-co%C3%BBt-et-performance">3. Coût et performance</h2>
+<ul>
+<li><strong>Stockage ADLS</strong> : très compétitif pour l'archivage (facturation à la capacité, tiering possible)</li>
+<li><strong>Databricks</strong> : coût à l'usage (clusters à la demande, auto-pause), dimensionnement selon la volumétrie et la fréquence d'analyse</li>
+<li><strong>Performance</strong> : très élevée pour le traitement batch/distribué, moins adaptée à l'interactif temps réel</li>
+</ul>
+<h2 id="4-compl%C3%A9mentarit%C3%A9-avec-adxlog-analytics">4. Complémentarité avec ADX/Log Analytics</h2>
+<ul>
+<li>Utiliser ADX/Log Analytics pour l'ingestion, l'alerting, l'analyse rapide sur logs chauds</li>
+<li>Exporter les logs froids vers ADLS pour archivage et analyses massives a posteriori</li>
+<li>Databricks permet d'exploiter la donnée archivée pour des analyses avancées, du ML, ou des besoins réglementaires</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+La combinaison Databricks + ADLS est idéale pour l'archivage long terme et l'analyse massive de logs froids. Elle complète parfaitement ADX/Log Analytics, en offrant une solution scalable, économique et puissante pour l'exploration et la valorisation des données historiques.</p>
+<h1 id="step-5--conversion-spl-vers-kql">Step 5 : Conversion SPL vers KQL</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Examiner la méthodologie de conversion des requêtes Splunk SPL vers KQL pour faciliter la formation des analystes.</p>
+<h2 id="1-principales-diff%C3%A9rences-splkql">1. Principales différences SPL/KQL</h2>
+<ul>
+<li><strong>Syntaxe</strong> : SPL (Splunk Processing Language) est orienté pipeline, KQL (Kusto Query Language) est orienté SQL-like avec des opérateurs enchaînés.</li>
+<li><strong>Fonctions</strong> : Les fonctions d'agrégation, de parsing, de stats et de recherche diffèrent dans leur nommage et leur usage.</li>
+<li><strong>Gestion du temps</strong> : Les deux langages gèrent le time slicing, mais la syntaxe diffère.</li>
+<li><strong>Visualisation</strong> : SPL intègre la visualisation, KQL s'appuie sur des outils externes (Power BI, dashboards Azure).</li>
+</ul>
+<h2 id="2-outils-et-guides-de-conversion">2. Outils et guides de conversion</h2>
+<ul>
+<li>Documentation officielle Microsoft : <a href="https://learn.microsoft.com/fr-fr/azure/data-explorer/kusto/query/spl">Guide de migration SPL vers KQL</a></li>
+<li>Outils communautaires de conversion (scripts Python, plugins VSCode)</li>
+<li>Tableaux de correspondance SPL/KQL (opérateurs, fonctions)</li>
+</ul>
+<h2 id="3-exemples-concrets">3. Exemples concrets</h2>
+<table>
+<thead>
+<tr>
+<th>SPL (Splunk)</th>
+<th>KQL (ADX)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>index=logs error | stats count by host</code></td>
+<td><code>logs | where error == true | summarize count() by host</code></td>
+</tr>
+<tr>
+<td><code>... | timechart span=1h count</code></td>
+<td><code>... | summarize count() by bin(TimeGenerated, 1h)</code></td>
+</tr>
+<tr>
+<td><code>... | top 10 user</code></td>
+<td><code>... | summarize count() by user | top 10 by count_</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-plan-de-formation">4. Plan de formation</h2>
+<ul>
+<li>Sensibilisation aux concepts KQL (opérateurs, pipes, agrégations)</li>
+<li>Ateliers de conversion de requêtes SPL -&gt; KQL sur des cas réels</li>
+<li>Mise à disposition de guides de correspondance et d'exemples</li>
+<li>Accompagnement sur les outils d'exploration (portail Azure, notebooks, Power BI)</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+La conversion SPL vers KQL nécessite un accompagnement méthodologique et pratique. L'effort de formation est limité pour des analystes déjà familiers avec les requêtes Splunk, grâce à la richesse de la documentation et des outils d'aide à la migration.</p>
+<h1 id="step-6--elk-stack-sur-azure">Step 6 : ELK Stack sur Azure</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Étudier la faisabilité d'un déploiement ELK Stack (self-managed) sur Azure pour l'analyse de logs à grande échelle.</p>
+<h2 id="1-architecture-cible-sur-azure">1. Architecture cible sur Azure</h2>
+<ul>
+<li><strong>Ingestion</strong> : Filebeat/Logstash déployés sur VM ou containers pour collecter et transformer les logs</li>
+<li><strong>Stockage/Indexation</strong> : Cluster Elasticsearch (VMs Azure, AKS ou Azure Managed Elasticsearch)</li>
+<li><strong>Visualisation</strong> : Kibana (VM, container ou service managé)</li>
+<li><strong>Sécurité</strong> : Azure Firewall, Private Link, RBAC, chiffrement</li>
+</ul>
+<p><img src="https://learn.microsoft.com/fr-fr/azure/architecture/example-scenario/logging/media/elk-architecture.png" alt="Architecture ELK sur Azure"></p>
+<h2 id="2-dimensionnement-et-co%C3%BBt">2. Dimensionnement et coût</h2>
+<ul>
+<li><strong>VMs</strong> : 3-10 nœuds Elasticsearch selon la volumétrie (5 To/jour → 100+ To stockés)</li>
+<li><strong>Stockage</strong> : Premium SSD/Ultra Disk pour la performance, Azure Blob pour l'archivage</li>
+<li><strong>Réseau</strong> : Load balancer, VNet, monitoring</li>
+<li><strong>Coût</strong> :
+<ul>
+<li>VM (E8s_v4 x 6, 24/7) : ~7 000 €/mois</li>
+<li>Stockage (100 To SSD) : ~2 000 €/mois</li>
+<li>Support, maintenance, licences : ~1 000 €/mois</li>
+<li><strong>Total estimé</strong> : <strong>~10 000 €/mois</strong> (hors surcharge d'exploitation)</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-avantages-et-limites">3. Avantages et limites</h2>
+<h3 id="avantages">Avantages</h3>
+<ul>
+<li>Contrôle total sur l'infrastructure et la configuration</li>
+<li>Large écosystème open source, plugins, communauté</li>
+<li>Flexibilité d'intégration avec d'autres outils</li>
+</ul>
+<h3 id="limites">Limites</h3>
+<ul>
+<li>Complexité d'exploitation, maintenance, upgrades</li>
+<li>Scalabilité manuelle, tuning nécessaire</li>
+<li>Coût caché (exploitation, incidents, support)</li>
+<li>Moins d'intégration native avec Azure que ADX/Log Analytics</li>
+</ul>
+<h2 id="4-comparaison-avec-adxdatabricks">4. Comparaison avec ADX/Databricks</h2>
+<table>
+<thead>
+<tr>
+<th>Critère</th>
+<th>ELK Stack (Azure)</th>
+<th>ADX/Log Analytics</th>
+<th>Databricks/ADLS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coût</td>
+<td>~10 000 €/mois</td>
+<td>~11 500 €/mois (ADX)</td>
+<td>Variable, stockage bas</td>
+</tr>
+<tr>
+<td>Scalabilité</td>
+<td>Manuelle</td>
+<td>Automatique</td>
+<td>Très élevée (batch)</td>
+</tr>
+<tr>
+<td>Maintenance</td>
+<td>À la charge du client</td>
+<td>Managée Azure</td>
+<td>Managée (Databricks)</td>
+</tr>
+<tr>
+<td>Fonctionnalités</td>
+<td>Très riche, plugins</td>
+<td>KQL, alerting natif</td>
+<td>ML, batch, exploration</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Conclusion :</strong>
+Le déploiement d'un ELK Stack sur Azure est pertinent pour les organisations souhaitant garder la main sur leur stack open source, mais il implique une charge d'exploitation et de maintenance importante. Pour des besoins de scalabilité, de simplicité et d'intégration cloud, ADX ou Databricks sont souvent plus adaptés.</p>
+<h1 id="step-7--analyse-des-risques-de-migration">Step 7 : Analyse des risques de migration</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Analyser les risques liés à la migration vers ELK ou Azure ADX/KQL.</p>
+<h2 id="1-risques-techniques">1. Risques techniques</h2>
+<ul>
+<li><strong>Perte de données</strong> lors de la migration des historiques</li>
+<li><strong>Incompatibilité des formats de logs</strong> ou des schémas</li>
+<li><strong>Performance dégradée</strong> lors des phases de bascule ou de double run</li>
+<li><strong>Complexité de la conversion des requêtes</strong> (SPL → KQL, SPL → Elasticsearch DSL)</li>
+<li><strong>Intégration avec les outils existants</strong> (alerting, dashboards, SIEM)</li>
+</ul>
+<h2 id="2-risques-organisationnels">2. Risques organisationnels</h2>
+<ul>
+<li><strong>Courbe d'apprentissage</strong> pour les équipes (KQL, ELK)</li>
+<li><strong>Changement de processus</strong> et d'outils pour les analystes</li>
+<li><strong>Gestion du changement</strong> et adhésion des utilisateurs</li>
+<li><strong>Disponibilité des compétences</strong> (recrutement, formation)</li>
+</ul>
+<h2 id="3-risques-financiers">3. Risques financiers</h2>
+<ul>
+<li><strong>Sous-estimation des coûts de migration</strong> (projets, licences, consulting)</li>
+<li><strong>Coûts cachés</strong> liés à l'exploitation, au support, à la formation</li>
+<li><strong>Dépassement budgétaire</strong> en cas de retard ou de complexité imprévue</li>
+</ul>
+<h2 id="4-plans-de-mitigation">4. Plans de mitigation</h2>
+<ul>
+<li><strong>Phase pilote</strong> sur un périmètre restreint avant généralisation</li>
+<li><strong>Tests de migration</strong> et validation de bout en bout (data, requêtes, alertes)</li>
+<li><strong>Documentation et guides de conversion</strong> pour les requêtes et les processus</li>
+<li><strong>Formation et accompagnement</strong> des équipes (ateliers, support)</li>
+<li><strong>Suivi budgétaire</strong> et ajustement du planning selon les retours</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+La migration vers une nouvelle solution d'analyse de logs (ELK ou ADX/KQL) comporte des risques multiples, mais ceux-ci peuvent être fortement réduits par une approche progressive, des tests rigoureux et un accompagnement adapté des équipes.</p>
+<h1 id="step-8--estimation-financi%C3%A8re-des-solutions">Step 8 : Estimation financière des solutions</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Estimer le coût global des trois solutions proposées (ADX, ELK, Databricks).</p>
+<h2 id="1-hypoth%C3%A8ses-de-calcul">1. Hypothèses de calcul</h2>
+<ul>
+<li><strong>Volume de logs</strong> : 5 To/jour</li>
+<li><strong>Rétention</strong> : 30 jours (hot), 365 jours (cold)</li>
+<li><strong>Utilisateurs</strong> : 20 analystes, 5 administrateurs</li>
+<li><strong>Région</strong> : Europe Ouest</li>
+<li><strong>Support 24/7</strong> inclus</li>
+</ul>
+<h2 id="2-estimation-d%C3%A9taill%C3%A9e-par-solution">2. Estimation détaillée par solution</h2>
+<h3 id="azure-data-explorer-adx">Azure Data Explorer (ADX)</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Hypothèse</th>
+<th>Coût mensuel estimé (EUR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster ADX (D14_v2)</td>
+<td>2 nœuds, 30 jours, 24/7</td>
+<td>~7 500 €</td>
+</tr>
+<tr>
+<td>Stockage hot (30j)</td>
+<td>150 To</td>
+<td>~1 500 €</td>
+</tr>
+<tr>
+<td>Stockage cold (ADLS)</td>
+<td>1,7 Po (365j)</td>
+<td>~2 000 €</td>
+</tr>
+<tr>
+<td>Réseau, monitoring</td>
+<td>Divers</td>
+<td>~500 €</td>
+</tr>
+<tr>
+<td><strong>Total ADX</strong></td>
+<td></td>
+<td><strong>~11 500 €</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="elk-stack-self-managed-sur-azure">ELK Stack (self-managed sur Azure)</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Hypothèse</th>
+<th>Coût mensuel estimé (EUR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>VM Elasticsearch</td>
+<td>6 nœuds E8s_v4, 24/7</td>
+<td>~7 000 €</td>
+</tr>
+<tr>
+<td>Stockage SSD (100 To)</td>
+<td>Premium SSD</td>
+<td>~2 000 €</td>
+</tr>
+<tr>
+<td>Support, maintenance</td>
+<td>Divers</td>
+<td>~1 000 €</td>
+</tr>
+<tr>
+<td><strong>Total ELK</strong></td>
+<td></td>
+<td><strong>~10 000 €</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="databricks--adls">Databricks + ADLS</h3>
+<table>
+<thead>
+<tr>
+<th>Élément</th>
+<th>Hypothèse</th>
+<th>Coût mensuel estimé (EUR)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stockage ADLS (1,7 Po)</td>
+<td>Archivage long terme</td>
+<td>~2 000 €</td>
+</tr>
+<tr>
+<td>Clusters Databricks</td>
+<td>2 jobs batch/semaine</td>
+<td>~3 000 €</td>
+</tr>
+<tr>
+<td>Support, monitoring</td>
+<td>Divers</td>
+<td>~500 €</td>
+</tr>
+<tr>
+<td><strong>Total Databricks</strong></td>
+<td></td>
+<td><strong>~5 500 €</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-synth%C3%A8se-comparative">3. Synthèse comparative</h2>
+<table>
+<thead>
+<tr>
+<th>Solution</th>
+<th>Coût mensuel estimé</th>
+<th>Points forts</th>
+<th>Points faibles</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ADX</td>
+<td>~11 500 €</td>
+<td>Scalabilité, cloud natif, KQL</td>
+<td>Courbe KQL, dépendance Azure</td>
+</tr>
+<tr>
+<td>ELK</td>
+<td>~10 000 €</td>
+<td>Contrôle, open source</td>
+<td>Maintenance, tuning</td>
+</tr>
+<tr>
+<td>Databricks</td>
+<td>~5 500 €</td>
+<td>Coût stockage, ML, batch</td>
+<td>Moins interactif, batch only</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p><strong>Conclusion :</strong>
+Chaque solution présente des avantages et des coûts spécifiques. ADX est optimal pour l'analyse interactive et l'intégration Azure, ELK pour le contrôle open source, Databricks/ADLS pour l'archivage et l'analyse massive à coût optimisé.</p>
+<h1 id="step-9--tableau-de-bord-synth%C3%A9tique">Step 9 : Tableau de bord synthétique</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Synthétiser les points clés (coût, risque, architecture) dans un tableau de bord pour la présentation client.</p>
+<h2 id="1-tableau-comparatif-des-solutions">1. Tableau comparatif des solutions</h2>
+<table>
+<thead>
+<tr>
+<th>Critère</th>
+<th>ADX</th>
+<th>ELK Stack</th>
+<th>Databricks/ADLS</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coût mensuel</td>
+<td>~11 500 €</td>
+<td>~10 000 €</td>
+<td>~5 500 €</td>
+</tr>
+<tr>
+<td>Scalabilité</td>
+<td>Très élevée, managée</td>
+<td>Manuelle, tuning</td>
+<td>Très élevée (batch)</td>
+</tr>
+<tr>
+<td>Maintenance</td>
+<td>Managée Azure</td>
+<td>À la charge du client</td>
+<td>Managée (Databricks)</td>
+</tr>
+<tr>
+<td>Interactivité</td>
+<td>Temps réel, KQL</td>
+<td>Temps réel, DSL</td>
+<td>Batch, ML, exploration</td>
+</tr>
+<tr>
+<td>Sécurité</td>
+<td>Azure AD, RBAC, SIEM</td>
+<td>Custom, plugins</td>
+<td>Azure AD, RBAC</td>
+</tr>
+<tr>
+<td>Intégration</td>
+<td>Azure, Power BI, SIEM</td>
+<td>Open source, plugins</td>
+<td>Azure, ML, Power BI</td>
+</tr>
+<tr>
+<td>Risques</td>
+<td>Courbe KQL, dépendance</td>
+<td>Exploitation, tuning</td>
+<td>Moins interactif</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-recommandations">2. Recommandations</h2>
+<ul>
+<li><strong>ADX</strong> : recommandé pour l'analyse interactive, l'alerting temps réel, l'intégration Azure et la supervision massive.</li>
+<li><strong>ELK Stack</strong> : pertinent pour les organisations souhaitant garder la main sur leur stack open source, avec une équipe d'exploitation expérimentée.</li>
+<li><strong>Databricks/ADLS</strong> : idéal pour l'archivage long terme, l'analyse massive a posteriori, le machine learning et la conformité réglementaire.</li>
+</ul>
+<h2 id="3-points-dattention">3. Points d'attention</h2>
+<ul>
+<li>Bien évaluer la courbe d'apprentissage KQL/SPL/DSL selon les équipes</li>
+<li>Anticiper les coûts cachés (exploitation, support, formation)</li>
+<li>Prévoir une phase pilote et des tests de migration</li>
+<li>Adapter la solution à la volumétrie réelle et aux besoins métiers</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+Le choix de la solution dépendra des priorités (coût, interactivité, contrôle, conformité). Une architecture hybride (ADX pour le chaud, Databricks/ADLS pour le froid) est souvent optimale pour les très gros volumes de logs.</p>
+<h1 id="step-10--plan-de-migration-adx">Step 10 : Plan de migration ADX</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Structurer les étapes clés d'un plan de migration vers Azure Data Explorer (ADX).</p>
+<h2 id="1-phasage-du-projet">1. Phasage du projet</h2>
+<ol>
+<li><strong>Cadrage</strong> : analyse des besoins, volumétrie, exigences métiers</li>
+<li><strong>Architecture cible</strong> : définition de l'architecture ADX, choix des outils d'ingestion, sécurité</li>
+<li><strong>Planification</strong> : découpage en lots, jalons, ressources</li>
+</ol>
+<h2 id="2-pr%C3%A9paration-des-donn%C3%A9es">2. Préparation des données</h2>
+<ul>
+<li>Cartographie des sources de logs</li>
+<li>Nettoyage, normalisation et mapping des schémas</li>
+<li>Définition des stratégies de rétention (hot/cold)</li>
+<li>Mise en place des pipelines d'ingestion (Event Hub, Data Factory, etc.)</li>
+</ul>
+<h2 id="3-migration-des-requ%C3%AAtes">3. Migration des requêtes</h2>
+<ul>
+<li>Inventaire des requêtes SPL existantes</li>
+<li>Conversion SPL → KQL (outils, guides, ateliers)</li>
+<li>Tests de performance et d'exactitude sur KQL</li>
+</ul>
+<h2 id="4-tests-et-validation">4. Tests et validation</h2>
+<ul>
+<li>Tests d'ingestion (volumétrie, latence)</li>
+<li>Validation des requêtes et des alertes</li>
+<li>Recette fonctionnelle avec les analystes</li>
+<li>Tests de montée en charge</li>
+</ul>
+<h2 id="5-formation-et-conduite-du-changement">5. Formation et conduite du changement</h2>
+<ul>
+<li>Sessions de formation KQL pour les analystes</li>
+<li>Documentation des nouveaux processus</li>
+<li>Support et accompagnement post-migration</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+Un plan de migration structuré, itératif et accompagné est essentiel pour garantir le succès du passage à Azure Data Explorer, tout en minimisant les risques et en maximisant l'adoption par les équipes.</p>
+<h1 id="step-11--outils-dingestion-pour-azure">Step 11 : Outils d'ingestion pour Azure</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Détailler les outils d'ingestion spécifiques pour remplacer les Universal Forwarders de Splunk dans l'architecture Azure.</p>
+<h2 id="1-alternatives-azure-aux-universal-forwarders">1. Alternatives Azure aux Universal Forwarders</h2>
+<ul>
+<li><strong>Azure Monitor Agent (AMA)</strong> : agent natif pour collecter logs et métriques sur VM, serveurs, containers</li>
+<li><strong>Logstash</strong> : pipeline open source, compatible Azure Event Hub, transformation et enrichissement des logs</li>
+<li><strong>Azure Event Hub</strong> : service de streaming pour ingestion massive, bufferisation et distribution des logs</li>
+<li><strong>Azure Data Collector API</strong> : ingestion personnalisée via API REST</li>
+<li><strong>Fluentd/Fluent Bit</strong> : agents open source, support natif Azure, transformation flexible</li>
+<li><strong>Azure Data Factory</strong> : ingestion batch, orchestration de flux de données</li>
+</ul>
+<h2 id="2-architecture-dingestion-type">2. Architecture d'ingestion type</h2>
+<ol>
+<li><strong>Sources</strong> : serveurs, applications, appliances réseau</li>
+<li><strong>Agents</strong> : AMA, Logstash, Fluentd, etc. déployés sur les sources</li>
+<li><strong>Buffer/Streaming</strong> : Event Hub pour absorber les pics et garantir la résilience</li>
+<li><strong>Cibles</strong> : Log Analytics, ADX, Data Lake, SIEM</li>
+</ol>
+<p><img src="https://learn.microsoft.com/fr-fr/azure/architecture/example-scenario/logging/media/centralized-logging-architecture.png" alt="Architecture ingestion Azure"></p>
+<h2 id="3-bonnes-pratiques">3. Bonnes pratiques</h2>
+<ul>
+<li>Standardiser les formats de logs (JSON, CEF, Syslog)</li>
+<li>Sécuriser les flux (TLS, authentification, RBAC)</li>
+<li>Superviser l'état des agents et la latence d'ingestion</li>
+<li>Mettre en place des alertes sur les échecs d'ingestion</li>
+<li>Documenter les pipelines et les transformations</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+L'écosystème Azure propose de nombreux outils pour remplacer les Universal Forwarders de Splunk, avec des solutions natives, open source et managées. Le choix dépendra du contexte technique, des volumes et des exigences de sécurité et de supervision.</p>
+<h1 id="step-12--sch%C3%A9mas-darchitecture-cible-plantuml">Step 12 : Schémas d'architecture cible (PlantUML)</h1>
+<h2 id="objectif">Objectif</h2>
+<p>Fournir des schémas d'architecture de synthèse (PlantUML ou autre) pour illustrer la solution cible.</p>
+<h2 id="1-sch%C3%A9ma-global-de-la-solution-exemple-plantuml">1. Schéma global de la solution (exemple PlantUML)</h2>
+<pre class="hljs"><code><div>@startuml
+!define RECTANGLE class
+RECTANGLE &quot;Sources de logs&quot; as Sources
+RECTANGLE &quot;Agents d'ingestion (AMA, Logstash, Fluentd)&quot; as Agents
+RECTANGLE &quot;Buffer/Streaming (Event Hub)&quot; as Buffer
+RECTANGLE &quot;Analyse &amp; Stockage (ADX, Log Analytics, Databricks, ELK)&quot; as Analyse
+RECTANGLE &quot;Dashboards &amp; Alerting (Power BI, Kibana, Azure Monitor)&quot; as Dashboards
+
+Sources --&gt; Agents
+Agents --&gt; Buffer
+Buffer --&gt; Analyse
+Analyse --&gt; Dashboards
+@enduml
+</div></code></pre>
+<h2 id="2-variantes-selon-les-options">2. Variantes selon les options</h2>
+<h3 id="a-architecture-adx">a) Architecture ADX</h3>
+<pre class="hljs"><code><div>@startuml
+RECTANGLE &quot;Sources de logs&quot; as Sources
+RECTANGLE &quot;Azure Monitor Agent&quot; as AMA
+RECTANGLE &quot;Event Hub&quot; as EH
+RECTANGLE &quot;Azure Data Explorer (ADX)&quot; as ADX
+RECTANGLE &quot;Power BI / KQL / Alerting&quot; as BI
+
+Sources --&gt; AMA
+AMA --&gt; EH
+EH --&gt; ADX
+ADX --&gt; BI
+@enduml
+</div></code></pre>
+<h3 id="b-architecture-elk">b) Architecture ELK</h3>
+<pre class="hljs"><code><div>@startuml
+RECTANGLE &quot;Sources de logs&quot; as Sources
+RECTANGLE &quot;Filebeat / Logstash&quot; as Logstash
+RECTANGLE &quot;Elasticsearch&quot; as ES
+RECTANGLE &quot;Kibana&quot; as Kibana
+
+Sources --&gt; Logstash
+Logstash --&gt; ES
+ES --&gt; Kibana
+@enduml
+</div></code></pre>
+<h3 id="c-architecture-databricksadls">c) Architecture Databricks/ADLS</h3>
+<pre class="hljs"><code><div>@startuml
+RECTANGLE &quot;Sources de logs&quot; as Sources
+RECTANGLE &quot;Event Hub / Data Factory&quot; as Ingestion
+RECTANGLE &quot;Azure Data Lake Storage (ADLS)&quot; as ADLS
+RECTANGLE &quot;Azure Databricks&quot; as DBX
+RECTANGLE &quot;Power BI / ML / Reporting&quot; as BI
+
+Sources --&gt; Ingestion
+Ingestion --&gt; ADLS
+ADLS --&gt; DBX
+DBX --&gt; BI
+@enduml
+</div></code></pre>
+<h2 id="3-l%C3%A9gende-et-explications">3. Légende et explications</h2>
+<ul>
+<li><strong>Sources de logs</strong> : applications, serveurs, appliances réseau</li>
+<li><strong>Agents d'ingestion</strong> : outils pour collecter et transformer les logs</li>
+<li><strong>Buffer/Streaming</strong> : absorption des pics, résilience</li>
+<li><strong>Analyse &amp; Stockage</strong> : moteur d'analyse, stockage hot/cold</li>
+<li><strong>Dashboards &amp; Alerting</strong> : visualisation, alertes, reporting</li>
+</ul>
+<hr>
+<p><strong>Conclusion :</strong>
+Ces schémas illustrent les architectures cibles pour chaque solution. Ils peuvent être adaptés et enrichis selon les besoins spécifiques du client et les choix d'intégration.
+</p>
+
+</body>
+</html>

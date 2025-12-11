@@ -1,0 +1,12 @@
+@startuml
+RECTANGLE "Sources de logs" as Sources
+RECTANGLE "Azure Monitor Agent" as AMA
+RECTANGLE "Event Hub" as EH
+RECTANGLE "Azure Data Explorer (ADX)" as ADX
+RECTANGLE "Power BI / KQL / Alerting" as BI
+
+Sources --> AMA
+AMA --> EH
+EH --> ADX
+ADX --> BI
+@enduml

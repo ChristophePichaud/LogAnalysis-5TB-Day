@@ -1,0 +1,12 @@
+@startuml
+RECTANGLE "Sources de logs" as Sources
+RECTANGLE "Event Hub / Data Factory" as Ingestion
+RECTANGLE "Azure Data Lake Storage (ADLS)" as ADLS
+RECTANGLE "Azure Databricks" as DBX
+RECTANGLE "Power BI / ML / Reporting" as BI
+
+Sources --> Ingestion
+Ingestion --> ADLS
+ADLS --> DBX
+DBX --> BI
+@enduml
