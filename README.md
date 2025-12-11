@@ -1,10 +1,25 @@
 # LogAnalysis-5TB-Day
 
+## 🚀 Quick Start
+
+**Nouveau?** Commencez par le **[Executive Summary](./EXECUTIVE-SUMMARY.md)** (5 minutes de lecture) pour une vue d'ensemble rapide de la solution, des coûts et du ROI.
+
 ## Vue d'ensemble
 
 Ce repository contient l'architecture et la documentation pour une solution d'analyse de **5 TB de logs par jour** en utilisant **Azure Data Explorer (ADX)** avec le langage de requête **KQL (Kusto Query Language)**.
 
 ## 📋 Contenu de la Documentation
+
+### ⚡ Executive Summary
+
+#### [Executive Summary](./EXECUTIVE-SUMMARY.md) ⭐ **START HERE**
+Résumé exécutif de 5 minutes avec:
+- Solution recommandée et justification
+- Coûts résumés (4 scénarios)
+- Architecture simplifiée
+- ROI et bénéfices
+- Comparaison alternatives
+- Quick start en 30 minutes
 
 ### 📐 Architecture
 
